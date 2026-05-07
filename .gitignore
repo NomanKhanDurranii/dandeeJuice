@@ -6,6 +6,8 @@
 /public/storage
 /storage/*.key
 /storage/pail
+/storage/logs/*.log
+/storage/media-library/temp/
 /vendor
 .env
 .env.backup
@@ -22,3 +24,7 @@ yarn-error.log
 /.nova
 /.vscode
 /.zed
+/.claude
+.DS_Store
+Thumbs.db
+migrate_product_media.php
