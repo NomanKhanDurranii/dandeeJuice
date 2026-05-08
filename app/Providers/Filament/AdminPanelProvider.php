@@ -13,6 +13,7 @@ use Filament\Pages\Dashboard;
 use Filament\Panel;
 use Filament\PanelProvider;
 use Filament\Support\Colors\Color;
+use Filament\View\PanelsRenderHook;
 use App\Filament\Widgets\NewOrderAlertWidget;
 use App\Filament\Widgets\RecentOrdersWidget;
 use App\Filament\Widgets\StatsOverview;
@@ -54,6 +55,10 @@ class AdminPanelProvider extends PanelProvider
                     ->codeExpiryMinutes(10)
                     ->codeNotification(AdminLoginOtp::class),
             ])
+            ->renderHook(
+                PanelsRenderHook::STYLES_AFTER,
+                fn () => '<link rel="stylesheet" href="' . asset('css/admin-auth.css') . '?v=1">',
+            )
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\Filament\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\Filament\Pages')
             ->pages([
