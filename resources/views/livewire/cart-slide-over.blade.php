@@ -21,6 +21,7 @@
         x-init="$watch('$wire.open', val => open = val)"
         :class="open ? 'translate-x-0' : 'translate-x-full'"
         x-cloak
+        wire:ignore.self
     >
         {{-- Header --}}
         <div class="flex items-center justify-between px-5 py-4 border-b border-gray-100">
