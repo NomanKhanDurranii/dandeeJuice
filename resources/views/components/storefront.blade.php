@@ -28,7 +28,7 @@
         <div class="max-w-7xl mx-auto px-4 h-[4.5rem] flex items-center justify-between sm:grid sm:grid-cols-3">
 
             {{-- Left: zone + contact info --}}
-            <div class="flex items-center gap-5">
+            <div class="hidden sm:flex items-center gap-5">
                 {{-- Zone / order type --}}
                 @php
                     $orderType   = session('order_type');
