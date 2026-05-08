@@ -17,10 +17,10 @@
     {{-- Slide-over panel --}}
     <div
         class="fixed top-0 right-0 z-50 h-full w-full max-w-sm bg-white shadow-2xl flex flex-col transition-transform duration-300"
-        :class="{{ $open ? 'true' : 'false' }} ? 'translate-x-0' : 'translate-x-full'"
         x-data="{ open: @js($open) }"
         x-init="$watch('$wire.open', val => open = val)"
         :class="open ? 'translate-x-0' : 'translate-x-full'"
+        x-cloak
     >
         {{-- Header --}}
         <div class="flex items-center justify-between px-5 py-4 border-b border-gray-100">
