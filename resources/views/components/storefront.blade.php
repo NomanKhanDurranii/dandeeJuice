@@ -22,10 +22,10 @@
     @livewire('location-modal')
 
     {{-- =========== NAVBAR =========== --}}
-    <nav class="sticky top-0 z-30 bg-white border-b border-gray-100 shadow-sm">
+    <nav x-data="{ menuOpen: false }" class="sticky top-0 z-30 bg-white border-b border-gray-100 shadow-sm">
 
         {{-- Main row --}}
-        <div class="max-w-7xl mx-auto px-4 h-[4.5rem] grid grid-cols-3 items-center">
+        <div class="max-w-7xl mx-auto px-4 h-[4.5rem] flex items-center justify-between sm:grid sm:grid-cols-3">
 
             {{-- Left: zone + contact info --}}
             <div class="flex items-center gap-5">
@@ -71,7 +71,7 @@
             </div>
 
             {{-- Center: Logo --}}
-            <div class="flex justify-center">
+            <div class="flex sm:justify-center">
                 <a href="{{ route('home') }}" class="hover:opacity-80 transition">
                     <img src="/android-chrome-192x192.png" alt="DandeeJuice" class="h-16 w-auto">
                 </a>
@@ -109,6 +109,64 @@
                 @endauth
 
                 @livewire('cart-slide-over-trigger')
+
+                {{-- Hamburger (mobile only) --}}
+                <button
+                    @click="menuOpen = !menuOpen"
+                    class="sm:hidden flex items-center justify-center w-9 h-9 rounded-lg border border-gray-200 text-gray-600 hover:text-blue-900 hover:border-blue-200 transition"
+                    aria-label="Toggle menu"
+                >
+                    <svg x-show="!menuOpen" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/>
+                    </svg>
+                    <svg x-show="menuOpen" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+        {{-- Mobile dropdown menu --}}
+        <div
+            x-show="menuOpen"
+            x-cloak
+            x-transition:enter="transition ease-out duration-200"
+            x-transition:enter-start="opacity-0 -translate-y-1"
+            x-transition:enter-end="opacity-100 translate-y-0"
+            x-transition:leave="transition ease-in duration-150"
+            x-transition:leave-start="opacity-100 translate-y-0"
+            x-transition:leave-end="opacity-0 -translate-y-1"
+            class="sm:hidden border-t border-gray-100 bg-white"
+        >
+            <div class="px-4 py-3 space-y-1">
+                <a href="{{ route('home') }}" @click="menuOpen = false"
+                   class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold text-gray-700 hover:bg-blue-50 hover:text-blue-900 transition">
+                    <svg class="w-4 h-4 text-blue-900 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25"/>
+                    </svg>
+                    Home
+                </a>
+                <a href="{{ route('about') }}" @click="menuOpen = false"
+                   class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold text-gray-700 hover:bg-blue-50 hover:text-blue-900 transition">
+                    <svg class="w-4 h-4 text-blue-900 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z"/>
+                    </svg>
+                    About Us
+                </a>
+                <a href="{{ route('catering') }}" @click="menuOpen = false"
+                   class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold text-gray-700 hover:bg-blue-50 hover:text-blue-900 transition">
+                    <svg class="w-4 h-4 text-blue-900 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9.75 3.104v5.714a2.25 2.25 0 01-.659 1.591L5 14.5M9.75 3.104c-.251.023-.501.05-.75.082m.75-.082a24.301 24.301 0 014.5 0m0 0v5.714c0 .597.237 1.17.659 1.591L19.8 15.3M14.25 3.104c.251.023.501.05.75.082M19.8 15.3l-1.57.393A9.065 9.065 0 0112 15a9.065 9.065 0 00-6.23-.693L5 14.5m14.8.8l1.402 1.402c1 1 .316 2.702-1.067 2.702H4.865c-1.383 0-2.067-1.702-1.067-2.702L5 14.5"/>
+                    </svg>
+                    Catering Service
+                </a>
+                <a href="{{ route('contact') }}" @click="menuOpen = false"
+                   class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold text-gray-700 hover:bg-blue-50 hover:text-blue-900 transition">
+                    <svg class="w-4 h-4 text-blue-900 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 002.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 01-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 00-1.091-.852H4.5A2.25 2.25 0 002.25 4.5v2.25z"/>
+                    </svg>
+                    Contact Us
+                </a>
             </div>
         </div>
 

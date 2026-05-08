@@ -65,12 +65,17 @@
         @php
             $activeVariants = $product->activeVariants;
             $firstVariant   = $activeVariants->first();
+            $variantsJson   = $activeVariants->map(fn($v) => [
+                'id'    => $v->id,
+                'name'  => $v->name,
+                'price' => (float) $v->price,
+            ])->toJson();
         @endphp
         <div class="space-y-5" x-data="{
             qty: 1,
             basePrice: {{ (float) $product->price }},
             hasVariants: {{ $activeVariants->isNotEmpty() ? 'true' : 'false' }},
-            variants: @json($activeVariants->map(fn($v) => ['id' => $v->id, 'name' => $v->name, 'price' => (float) $v->price])),
+            variants: {{ $variantsJson }},
             selectedVariantId: {{ $firstVariant?->id ?? 0 }},
             get selectedVariant() {
                 return this.variants.find(v => v.id === this.selectedVariantId) ?? null;
