@@ -237,38 +237,45 @@
                                 </div>
 
                                 <div class="p-3 flex flex-col flex-1">
-                                    <h3 class="font-semibold text-gray-800 text-sm leading-snug mb-1 line-clamp-2">{{ $product->name }}</h3>
-                                    @if ($product->description)
-                                        <p class="text-gray-400 text-xs mb-2 line-clamp-2">{{ strip_tags($product->description) }}</p>
-                                    @endif
+                                    <h3 class="font-semibold text-gray-800 text-sm leading-snug line-clamp-2">{{ $product->name }}</h3>
 
-                                    <div class="mt-auto flex items-center justify-between gap-2 pt-2">
-                                        <div>
-                                            @if (($product->active_variants_count ?? 0) > 0)
-                                                <span class="text-xs text-gray-400 font-medium">Multiple sizes</span>
-                                            @else
-                                                <span class="font-bold text-red-600 text-base">PKR {{ number_format($product->price) }}</span>
-                                            @endif
+                                    @if (($product->active_variants_count ?? 0) > 0)
+                                        {{-- Variant product --}}
+                                        <div class="mt-1.5">
+                                            <span class="inline-flex items-center gap-1 text-[10px] font-bold text-red-600 bg-red-50 border border-red-100 px-2 py-0.5 rounded-full">
+                                                <svg class="w-2.5 h-2.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zM13.5 6a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25a2.25 2.25 0 01-2.25-2.25V6zM3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zM13.5 15.75a2.25 2.25 0 012.25-2.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-2.25A2.25 2.25 0 0113.5 18v-2.25z"/>
+                                                </svg>
+                                                Multiple sizes
+                                            </span>
                                         </div>
-
-                                        @if (($product->active_variants_count ?? 0) > 0)
-                                            {{-- Has variants — navigate to product page to choose size --}}
+                                        <div class="mt-auto pt-3">
                                             <a
                                                 href="{{ route('product.show', $product->slug) }}"
                                                 @click.stop
-                                                class="bg-blue-900 hover:bg-blue-800 text-white text-xs font-semibold px-3 h-8 rounded-full flex items-center justify-center shadow transition"
-                                                title="Choose size"
-                                            >Choose</a>
-                                        @else
-                                            {{-- No variants — direct add to cart --}}
+                                                class="w-full bg-red-600 hover:bg-red-700 active:scale-95 text-white text-xs font-bold h-8 rounded-xl flex items-center justify-center gap-1.5 shadow-sm transition"
+                                            >
+                                                Choose Size
+                                                <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"/>
+                                                </svg>
+                                            </a>
+                                        </div>
+                                    @else
+                                        {{-- Regular product --}}
+                                        @if ($product->description)
+                                            <p class="text-gray-400 text-xs mt-1 line-clamp-2">{{ strip_tags($product->description) }}</p>
+                                        @endif
+                                        <div class="mt-auto flex items-center justify-between gap-2 pt-2">
+                                            <span class="font-bold text-red-600 text-base">PKR {{ number_format($product->price) }}</span>
                                             <button
                                                 x-data
                                                 @click.prevent.stop="Livewire.dispatch('add-to-cart', { id: {{ $product->id }}, qty: 1, variantId: 0 }); $el.classList.add('scale-90'); setTimeout(() => $el.classList.remove('scale-90'), 150)"
                                                 class="bg-red-600 hover:bg-red-700 text-white w-8 h-8 rounded-full flex items-center justify-center text-xl font-bold shadow transition-transform"
                                                 title="Add to cart"
                                             >+</button>
-                                        @endif
-                                    </div>
+                                        </div>
+                                    @endif
                                 </div>
                             </a>
                         @endforeach
