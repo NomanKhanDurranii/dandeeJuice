@@ -125,6 +125,17 @@ return [
     |
     */
 
-    'serializable_classes' => false,
+    'serializable_classes' => [
+        \Illuminate\Database\Eloquent\Collection::class,
+        \Illuminate\Support\Collection::class,
+        \Illuminate\Pagination\LengthAwarePaginator::class,
+        \App\Models\Category::class,
+        \App\Models\Product::class,
+        \App\Models\CarouselSlide::class,
+        \App\Models\Faq::class,
+        \App\Models\Review::class,
+        \Illuminate\Support\Carbon::class,
+        \Carbon\CarbonImmutable::class,
+    ],
 
 ];
