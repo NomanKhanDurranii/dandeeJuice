@@ -14,48 +14,69 @@ class CartService
         return collect(session(self::SESSION_KEY, []));
     }
 
-    public function add(int $productId, int $qty = 1): void
+    /**
+     * Add a product (optionally with a specific variant) to the cart.
+     * Cart key format: "{productId}" or "{productId}:{variantId}"
+     */
+    public function add(int $productId, int $qty = 1, int $variantId = 0): void
     {
-        $cart = session(self::SESSION_KEY, []);
+        $cart    = session(self::SESSION_KEY, []);
         $product = Product::find($productId);
 
         if (! $product || ! $product->is_active) {
             return;
         }
 
-        if (isset($cart[$productId])) {
-            $cart[$productId]['qty'] += $qty;
+        $price       = (float) $product->price;
+        $variantName = null;
+        $cartKey     = (string) $productId;
+
+        if ($variantId) {
+            $variant = $product->variants()->where('id', $variantId)->where('is_active', true)->first();
+            if (! $variant) {
+                return;
+            }
+            $price       = (float) $variant->price;
+            $variantName = $variant->name;
+            $cartKey     = "{$productId}:{$variantId}";
+        }
+
+        if (isset($cart[$cartKey])) {
+            $cart[$cartKey]['qty'] += $qty;
         } else {
-            $cart[$productId] = [
-                'id' => $productId,
-                'name' => $product->name,
-                'price' => (float) $product->price,
-                'qty' => $qty,
-                'image' => $product->getFirstMediaUrl('images'),
+            $cart[$cartKey] = [
+                'cart_key'    => $cartKey,
+                'id'          => $productId,
+                'variant_id'  => $variantId ?: null,
+                'variant_name'=> $variantName,
+                'name'        => $product->name,
+                'price'       => $price,
+                'qty'         => $qty,
+                'image'       => $product->getFirstMediaUrl('images'),
             ];
         }
 
         session([self::SESSION_KEY => $cart]);
     }
 
-    public function remove(int $productId): void
+    public function remove(string $cartKey): void
     {
         $cart = session(self::SESSION_KEY, []);
-        unset($cart[$productId]);
+        unset($cart[$cartKey]);
         session([self::SESSION_KEY => $cart]);
     }
 
-    public function updateQty(int $productId, int $qty): void
+    public function updateQty(string $cartKey, int $qty): void
     {
         $cart = session(self::SESSION_KEY, []);
 
         if ($qty < 1) {
-            $this->remove($productId);
+            $this->remove($cartKey);
             return;
         }
 
-        if (isset($cart[$productId])) {
-            $cart[$productId]['qty'] = $qty;
+        if (isset($cart[$cartKey])) {
+            $cart[$cartKey]['qty'] = $qty;
             session([self::SESSION_KEY => $cart]);
         }
     }

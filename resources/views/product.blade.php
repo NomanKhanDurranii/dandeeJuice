@@ -62,7 +62,23 @@
         </div>
 
         {{-- ---- RIGHT: Product info ---- --}}
-        <div class="space-y-5" x-data="{ qty: 1 }">
+        @php
+            $activeVariants = $product->activeVariants;
+            $firstVariant   = $activeVariants->first();
+        @endphp
+        <div class="space-y-5" x-data="{
+            qty: 1,
+            basePrice: {{ (float) $product->price }},
+            hasVariants: {{ $activeVariants->isNotEmpty() ? 'true' : 'false' }},
+            variants: @json($activeVariants->map(fn($v) => ['id' => $v->id, 'name' => $v->name, 'price' => (float) $v->price])),
+            selectedVariantId: {{ $firstVariant?->id ?? 0 }},
+            get selectedVariant() {
+                return this.variants.find(v => v.id === this.selectedVariantId) ?? null;
+            },
+            get displayPrice() {
+                return this.selectedVariant ? this.selectedVariant.price : this.basePrice;
+            }
+        }">
 
             {{-- Category + badges --}}
             <div class="flex items-center gap-2 flex-wrap">
@@ -99,9 +115,11 @@
                 <p class="text-sm text-gray-400">No reviews yet — be the first!</p>
             @endif
 
-            {{-- Price --}}
+            {{-- Price — dynamic when variants exist --}}
             <div class="flex items-baseline gap-3">
-                <span class="text-4xl font-extrabold text-red-600">PKR {{ number_format($product->price) }}</span>
+                <span class="text-4xl font-extrabold text-red-600">
+                    PKR <span x-text="displayPrice.toLocaleString()"></span>
+                </span>
             </div>
 
             <hr class="border-gray-100">
@@ -112,6 +130,31 @@
                     {!! $product->description !!}
                 </div>
             @endif
+
+            {{-- Size Variant Selector (only shown when product has variants) --}}
+            <template x-if="hasVariants">
+                <div class="space-y-2">
+                    <p class="text-sm font-semibold text-gray-700">Choose Size</p>
+                    <div class="flex flex-wrap gap-2">
+                        <template x-for="v in variants" :key="v.id">
+                            <button
+                                @click="selectedVariantId = v.id"
+                                :class="selectedVariantId === v.id
+                                    ? 'bg-blue-900 text-white border-blue-900 shadow-md scale-105'
+                                    : 'bg-white text-gray-700 border-gray-200 hover:border-blue-300 hover:bg-blue-50'"
+                                class="flex flex-col items-center px-5 py-3 rounded-2xl border-2 transition-all duration-150 font-semibold min-w-[90px]"
+                            >
+                                <span class="text-sm" x-text="v.name"></span>
+                                <span
+                                    class="text-xs font-bold mt-0.5"
+                                    :class="selectedVariantId === v.id ? 'text-blue-200' : 'text-red-600'"
+                                    x-text="'PKR ' + Number(v.price).toLocaleString()"
+                                ></span>
+                            </button>
+                        </template>
+                    </div>
+                </div>
+            </template>
 
             <hr class="border-gray-100">
 
@@ -141,7 +184,11 @@
 
                     {{-- Add to cart --}}
                     <button
-                        @click="Livewire.dispatch('add-to-cart', { id: {{ $product->id }}, qty: qty })"
+                        @click="Livewire.dispatch('add-to-cart', {
+                            id: {{ $product->id }},
+                            qty: qty,
+                            variantId: hasVariants ? selectedVariantId : 0
+                        })"
                         class="flex-1 bg-red-600 hover:bg-red-700 text-white font-bold py-3.5 rounded-xl transition active:scale-95 flex items-center justify-center gap-2 shadow-sm"
                     >
                         <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -153,7 +200,7 @@
 
                 {{-- Running total --}}
                 <p class="text-xs text-gray-400 text-center">
-                    Total: <span class="font-semibold text-gray-600">PKR <span x-text="({{ $product->price }} * qty).toLocaleString()"></span></span>
+                    Total: <span class="font-semibold text-gray-600">PKR <span x-text="(displayPrice * qty).toLocaleString()"></span></span>
                 </p>
             </div>
 

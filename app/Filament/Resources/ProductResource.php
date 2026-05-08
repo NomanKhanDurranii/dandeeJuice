@@ -9,6 +9,7 @@ use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\ExportAction;
 use Filament\Actions\ExportBulkAction;
+use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
@@ -53,10 +54,12 @@ class ProductResource extends Resource
                 ->placeholder('auto-generated'),
 
             TextInput::make('price')
+                ->label('Base Price (PKR)')
                 ->required()
                 ->numeric()
                 ->prefix('PKR')
-                ->minValue(0),
+                ->minValue(0)
+                ->helperText('Used when no size variants are defined.'),
 
             TextInput::make('order_column')
                 ->label('Sort Order')
@@ -78,6 +81,39 @@ class ProductResource extends Resource
                 ->reorderable()
                 ->image()
                 ->columnSpanFull(),
+
+            Repeater::make('variants')
+                ->relationship('variants')
+                ->schema([
+                    TextInput::make('name')
+                        ->required()
+                        ->placeholder('e.g. Single Scoop')
+                        ->columnSpan(2),
+
+                    TextInput::make('price')
+                        ->required()
+                        ->numeric()
+                        ->prefix('PKR')
+                        ->minValue(0)
+                        ->columnSpan(2),
+
+                    TextInput::make('order_column')
+                        ->label('Order')
+                        ->numeric()
+                        ->default(0)
+                        ->columnSpan(1),
+
+                    Toggle::make('is_active')
+                        ->label('Active')
+                        ->default(true)
+                        ->columnSpan(1),
+                ])
+                ->columns(6)
+                ->addActionLabel('+ Add Size Variant')
+                ->orderColumn('order_column')
+                ->columnSpanFull()
+                ->label('Size Variants')
+                ->helperText('Optional — add variants like Single/Double/Triple Scoop with separate prices. When variants exist, the base price above is ignored on the storefront.'),
         ]);
     }
 
@@ -91,6 +127,11 @@ class ProductResource extends Resource
                 TextColumn::make('name')->searchable()->sortable(),
                 TextColumn::make('category.name')->badge()->sortable(),
                 TextColumn::make('price')->money('PKR')->sortable(),
+                TextColumn::make('variants_count')
+                    ->label('Variants')
+                    ->counts('variants')
+                    ->badge()
+                    ->color(fn ($state) => $state > 0 ? 'success' : 'gray'),
                 TextColumn::make('order_column')->label('Order')->sortable(),
                 IconColumn::make('is_active')->label('Active')->boolean(),
                 TextColumn::make('created_at')->dateTime()->sortable()->toggleable(isToggledHiddenByDefault: true),

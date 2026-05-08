@@ -18,7 +18,7 @@ class HomeController extends Controller
             Category::query()
                 ->where('is_active', true)
                 ->orderBy('order_column')
-                ->with(['activeProducts' => fn ($q) => $q->orderBy('order_column')])
+                ->with(['activeProducts' => fn ($q) => $q->orderBy('order_column')->withCount('activeVariants')])
                 ->get()
         );
 

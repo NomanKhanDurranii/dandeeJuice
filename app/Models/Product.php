@@ -78,4 +78,14 @@ class Product extends Model implements HasMedia
     {
         return $this->hasMany(Review::class)->where('status', 'approved')->latest();
     }
+
+    public function variants(): HasMany
+    {
+        return $this->hasMany(ProductVariant::class)->orderBy('order_column');
+    }
+
+    public function activeVariants(): HasMany
+    {
+        return $this->hasMany(ProductVariant::class)->where('is_active', true)->orderBy('order_column');
+    }
 }

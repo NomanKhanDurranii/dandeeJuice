@@ -27,9 +27,9 @@ class CartSlideOver extends Component
     }
 
     #[On('add-to-cart')]
-    public function addToCart(int $id, int $qty = 1): void
+    public function addToCart(int $id, int $qty = 1, int $variantId = 0): void
     {
-        app(CartService::class)->add($id, $qty);
+        app(CartService::class)->add($id, $qty, $variantId);
         $this->syncCart();
         $this->open = true;
     }
@@ -47,30 +47,28 @@ class CartSlideOver extends Component
         $this->syncCart();
     }
 
-    public function removeItem(int $productId): void
+    public function removeItem(string $cartKey): void
     {
-        app(CartService::class)->remove($productId);
+        app(CartService::class)->remove($cartKey);
         $this->syncCart();
     }
 
-    public function increment(int $productId): void
+    public function increment(string $cartKey): void
     {
         $cart = app(CartService::class);
-        /** @var array{qty: int}|null $item */
-        $item = $cart->items()->get($productId);
+        $item = $cart->items()->get($cartKey);
         if (is_array($item)) {
-            $cart->updateQty($productId, $item['qty'] + 1);
+            $cart->updateQty($cartKey, $item['qty'] + 1);
         }
         $this->syncCart();
     }
 
-    public function decrement(int $productId): void
+    public function decrement(string $cartKey): void
     {
         $cart = app(CartService::class);
-        /** @var array{qty: int}|null $item */
-        $item = $cart->items()->get($productId);
+        $item = $cart->items()->get($cartKey);
         if (is_array($item)) {
-            $cart->updateQty($productId, $item['qty'] - 1);
+            $cart->updateQty($cartKey, $item['qty'] - 1);
         }
         $this->syncCart();
     }
@@ -94,11 +92,11 @@ class CartSlideOver extends Component
     private function syncCart(): void
     {
         $cart = app(CartService::class);
-        $this->items = $cart->items()->all();
-        $this->subtotal = $cart->subtotal();
-        $this->orderType = session('order_type') ?? '';
+        $this->items            = $cart->items()->all();
+        $this->subtotal         = $cart->subtotal();
+        $this->orderType        = session('order_type') ?? '';
         $this->deliveryZoneName = session('delivery_zone_name') ?? '';
-        $this->deliveryFee = (float) (session('delivery_fee') ?? 0);
+        $this->deliveryFee      = (float) (session('delivery_fee') ?? 0);
     }
 
     public function total(): float

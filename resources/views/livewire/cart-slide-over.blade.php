@@ -47,8 +47,9 @@
 
         {{-- Items --}}
         <div class="flex-1 overflow-y-auto px-5 py-4 space-y-4">
-            @forelse ($items as $productId => $item)
-                <div class="flex gap-3 items-start" wire:key="cart-item-{{ $productId }}">
+            @forelse ($items as $item)
+                @php $cartKey = $item['cart_key']; @endphp
+                <div class="flex gap-3 items-start" wire:key="cart-item-{{ $cartKey }}">
                     {{-- Thumb --}}
                     <div class="w-14 h-14 rounded-xl overflow-hidden bg-gray-100 shrink-0">
                         @if ($item['image'])
@@ -63,17 +64,20 @@
                     {{-- Info --}}
                     <div class="flex-1 min-w-0">
                         <p class="font-medium text-gray-800 text-sm truncate">{{ $item['name'] }}</p>
+                        @if (!empty($item['variant_name']))
+                            <p class="text-xs text-blue-600 font-medium">{{ $item['variant_name'] }}</p>
+                        @endif
                         <p class="text-red-600 font-semibold text-sm">PKR {{ number_format($item['price']) }}</p>
 
                         {{-- Qty controls --}}
                         <div class="flex items-center gap-2 mt-1.5">
                             <button
-                                wire:click="decrement({{ $productId }})"
+                                wire:click="decrement('{{ $cartKey }}')"
                                 class="w-7 h-7 flex items-center justify-center rounded-full border border-gray-200 hover:border-blue-400 hover:text-blue-700 text-gray-500 text-sm font-bold transition"
                             >−</button>
                             <span class="text-sm font-semibold w-5 text-center">{{ $item['qty'] }}</span>
                             <button
-                                wire:click="increment({{ $productId }})"
+                                wire:click="increment('{{ $cartKey }}')"
                                 class="w-7 h-7 flex items-center justify-center rounded-full border border-gray-200 hover:border-blue-400 hover:text-blue-700 text-gray-500 text-sm font-bold transition"
                             >+</button>
                         </div>
@@ -83,7 +87,7 @@
                     <div class="text-right shrink-0">
                         <p class="text-sm font-semibold text-gray-700">PKR {{ number_format($item['price'] * $item['qty']) }}</p>
                         <button
-                            wire:click="removeItem({{ $productId }})"
+                            wire:click="removeItem('{{ $cartKey }}')"
                             class="text-xs text-red-400 hover:text-red-600 mt-1 transition"
                         >Remove</button>
                     </div>

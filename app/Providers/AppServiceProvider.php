@@ -6,11 +6,13 @@ use App\Models\CarouselSlide;
 use App\Models\Category;
 use App\Models\Faq;
 use App\Models\Product;
+use App\Models\ProductVariant;
 use App\Models\Review;
 use App\Observers\CarouselSlideObserver;
 use App\Observers\CategoryObserver;
 use App\Observers\FaqObserver;
 use App\Observers\ProductObserver;
+use App\Observers\ProductVariantObserver;
 use App\Observers\ReviewObserver;
 use Carbon\CarbonImmutable;
 use Illuminate\Support\Facades\Date;
@@ -43,6 +45,7 @@ class AppServiceProvider extends ServiceProvider
     protected function registerObservers(): void
     {
         Product::observe(ProductObserver::class);
+        ProductVariant::observe(ProductVariantObserver::class);
         Category::observe(CategoryObserver::class);
         CarouselSlide::observe(CarouselSlideObserver::class);
         Faq::observe(FaqObserver::class);

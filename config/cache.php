@@ -131,6 +131,7 @@ return [
         \Illuminate\Pagination\LengthAwarePaginator::class,
         \App\Models\Category::class,
         \App\Models\Product::class,
+        \App\Models\ProductVariant::class,
         \App\Models\CarouselSlide::class,
         \App\Models\Faq::class,
         \App\Models\Review::class,

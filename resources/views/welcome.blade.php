@@ -235,14 +235,31 @@
                                     @endif
 
                                     <div class="mt-auto flex items-center justify-between gap-2 pt-2">
-                                        <span class="font-bold text-red-600 text-base">PKR {{ number_format($product->price) }}</span>
+                                        <div>
+                                            @if (($product->active_variants_count ?? 0) > 0)
+                                                <span class="text-xs text-gray-400 font-medium">Multiple sizes</span>
+                                            @else
+                                                <span class="font-bold text-red-600 text-base">PKR {{ number_format($product->price) }}</span>
+                                            @endif
+                                        </div>
 
-                                        <button
-                                            x-data
-                                            @click.prevent.stop="Livewire.dispatch('add-to-cart', { id: {{ $product->id }}, qty: 1 }); $el.classList.add('scale-90'); setTimeout(() => $el.classList.remove('scale-90'), 150)"
-                                            class="bg-red-600 hover:bg-red-700 text-white w-8 h-8 rounded-full flex items-center justify-center text-xl font-bold shadow transition-transform"
-                                            title="Add to cart"
-                                        >+</button>
+                                        @if (($product->active_variants_count ?? 0) > 0)
+                                            {{-- Has variants — navigate to product page to choose size --}}
+                                            <a
+                                                href="{{ route('product.show', $product->slug) }}"
+                                                @click.stop
+                                                class="bg-blue-900 hover:bg-blue-800 text-white text-xs font-semibold px-3 h-8 rounded-full flex items-center justify-center shadow transition"
+                                                title="Choose size"
+                                            >Choose</a>
+                                        @else
+                                            {{-- No variants — direct add to cart --}}
+                                            <button
+                                                x-data
+                                                @click.prevent.stop="Livewire.dispatch('add-to-cart', { id: {{ $product->id }}, qty: 1, variantId: 0 }); $el.classList.add('scale-90'); setTimeout(() => $el.classList.remove('scale-90'), 150)"
+                                                class="bg-red-600 hover:bg-red-700 text-white w-8 h-8 rounded-full flex items-center justify-center text-xl font-bold shadow transition-transform"
+                                                title="Add to cart"
+                                            >+</button>
+                                        @endif
                                     </div>
                                 </div>
                             </a>

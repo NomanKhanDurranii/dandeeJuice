@@ -15,7 +15,7 @@ class ProductController extends Controller
         $product = Cache::remember("product.{$slug}", self::TTL, fn () =>
             Product::where('slug', $slug)
                 ->where('is_active', true)
-                ->with(['category', 'approvedReviews'])
+                ->with(['category', 'approvedReviews', 'activeVariants'])
                 ->firstOrFail()
         );
 
