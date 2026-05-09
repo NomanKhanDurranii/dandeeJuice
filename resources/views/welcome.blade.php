@@ -214,23 +214,27 @@
         @forelse ($categories as $category)
             @if ($category->activeProducts->isNotEmpty())
                 <section id="cat-{{ $category->id }}" data-category-section style="scroll-margin-top: 7.5rem">
-                    <div class="flex items-stretch mb-8 rounded-2xl overflow-hidden shadow-xl ring-1 ring-black/[0.07] backdrop-blur-xl bg-white/75">
-                        {{-- Red gradient side bar --}}
-                        <div class="w-2.5 shrink-0 bg-gradient-to-b from-red-500 to-red-700"></div>
+                    <div class="flex items-stretch mb-8 rounded-2xl overflow-hidden shadow-2xl">
+                        {{-- Red left block --}}
+                        <div class="bg-gradient-to-b from-red-500 to-red-700 flex flex-col items-center justify-center px-4 shrink-0 gap-0.5">
+                            <svg class="w-5 h-5 text-white/80" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.75a.75.75 0 110-1.5.75.75 0 010 1.5zM12 12.75a.75.75 0 110-1.5.75.75 0 010 1.5zM12 18.75a.75.75 0 110-1.5.75.75 0 010 1.5z"/>
+                            </svg>
+                        </div>
 
-                        {{-- Text content --}}
-                        <div class="flex-1 min-w-0 px-5 py-4">
-                            <p class="text-[9px] font-bold text-red-500 uppercase tracking-[0.35em] mb-1">Our Menu</p>
-                            <h2 class="text-[1.65rem] leading-tight font-bold text-gray-900 truncate"
-                                style="font-family:'Playfair Display',Georgia,serif; font-style:italic; letter-spacing:-0.01em;">
+                        {{-- White content --}}
+                        <div class="bg-white flex-1 min-w-0 px-5 py-4">
+                            <p class="text-[9px] font-extrabold text-red-500 uppercase tracking-[0.35em] mb-1">Our Menu</p>
+                            <h2 class="leading-tight font-bold text-gray-900 truncate"
+                                style="font-family:'Playfair Display',Georgia,serif; font-style:italic; font-size:1.6rem; letter-spacing:-0.01em;">
                                 {{ $category->name }}
                             </h2>
                         </div>
 
-                        {{-- Count badge --}}
-                        <div class="shrink-0 flex flex-col items-center justify-center bg-gradient-to-b from-red-600 to-red-700 text-white w-16 shadow-inner">
-                            <span class="text-2xl font-black leading-none tracking-tight">{{ $category->activeProducts->count() }}</span>
-                            <span class="text-[8px] uppercase tracking-[0.15em] font-semibold mt-0.5 opacity-80">items</span>
+                        {{-- Dark count block --}}
+                        <div class="bg-gray-900 flex flex-col items-center justify-center px-5 shrink-0">
+                            <span class="text-3xl font-black text-white leading-none">{{ $category->activeProducts->count() }}</span>
+                            <span class="text-[8px] uppercase tracking-[0.18em] text-gray-400 font-semibold mt-1">items</span>
                         </div>
                     </div>
 
