@@ -214,18 +214,24 @@
         @forelse ($categories as $category)
             @if ($category->activeProducts->isNotEmpty())
                 <section id="cat-{{ $category->id }}" data-category-section style="scroll-margin-top: 7.5rem">
-                    <div class="flex items-center justify-between mb-7">
-                        <div class="flex items-center gap-3">
-                            <div class="w-1 h-10 rounded-full bg-gradient-to-b from-red-600 to-red-300 shrink-0"></div>
-                            <div>
-                                <h2 class="text-2xl font-extrabold text-gray-900 tracking-tight leading-none">{{ $category->name }}</h2>
-                                <p class="text-[11px] text-gray-400 font-semibold mt-1 uppercase tracking-widest">{{ $category->activeProducts->count() }} items available</p>
-                            </div>
+                    <div class="flex items-stretch mb-8 rounded-2xl overflow-hidden shadow-xl ring-1 ring-black/[0.07] backdrop-blur-xl bg-white/75">
+                        {{-- Red gradient side bar --}}
+                        <div class="w-2.5 shrink-0 bg-gradient-to-b from-red-500 to-red-700"></div>
+
+                        {{-- Text content --}}
+                        <div class="flex-1 min-w-0 px-5 py-4">
+                            <p class="text-[9px] font-bold text-red-500 uppercase tracking-[0.35em] mb-1">Our Menu</p>
+                            <h2 class="text-[1.65rem] leading-tight font-bold text-gray-900 truncate"
+                                style="font-family:'Playfair Display',Georgia,serif; font-style:italic; letter-spacing:-0.01em;">
+                                {{ $category->name }}
+                            </h2>
                         </div>
-                        <span class="hidden sm:inline-flex items-center gap-1.5 text-xs font-bold text-red-600 bg-red-50 border border-red-100 px-3 py-1.5 rounded-full">
-                            <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
-                            {{ $category->activeProducts->count() }} items
-                        </span>
+
+                        {{-- Count badge --}}
+                        <div class="shrink-0 flex flex-col items-center justify-center bg-gradient-to-b from-red-600 to-red-700 text-white w-16 shadow-inner">
+                            <span class="text-2xl font-black leading-none tracking-tight">{{ $category->activeProducts->count() }}</span>
+                            <span class="text-[8px] uppercase tracking-[0.15em] font-semibold mt-0.5 opacity-80">items</span>
+                        </div>
                     </div>
 
                     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
