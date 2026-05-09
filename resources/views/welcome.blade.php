@@ -366,8 +366,6 @@
         </div>
     </section>
 
-</x-storefront>
-
 @push('scripts')
 <script>
 (function () {
@@ -375,52 +373,41 @@
     const section = document.getElementById('products-scroll-section');
     if (!video || !section) return;
 
-    let rafId      = null;
-    let targetTime = 0;
-    let duration   = 0;
+    let last = -1;
 
-    function applyFrame() {
-        video.currentTime = targetTime;
-        rafId = null;
-    }
-
-    function onScroll() {
-        if (duration <= 0) return;
+    function update() {
+        const d = video.duration;
+        if (!d || !isFinite(d) || d <= 0) return;
 
         const rect       = section.getBoundingClientRect();
-        const sectionTop = window.scrollY + rect.top;
         const scrollable = section.offsetHeight - window.innerHeight;
         if (scrollable <= 0) return;
 
-        const scrolled = Math.max(0, window.scrollY - sectionTop);
-        const clamped  = Math.min(scrolled, scrollable);
-        targetTime     = (clamped / scrollable) * duration;
-
-        if (!rafId) rafId = requestAnimationFrame(applyFrame);
+        const progress = Math.min(Math.max(-rect.top, 0) / scrollable, 1);
+        if (Math.abs(progress - last) < 0.0005) return;
+        last = progress;
+        video.currentTime = progress * d;
     }
 
-    function onVideoReady() {
-        const d = video.duration;
-        if (!d || !isFinite(d) || d <= 0) return; // not ready yet, wait for next event
-        duration = d;
+    function loop() {
+        update();
+        requestAnimationFrame(loop);
+    }
+
+    function start() {
         video.pause();
-        video.currentTime = 0;
-        onScroll(); // sync to current scroll position
+        requestAnimationFrame(loop);
     }
 
-    window.addEventListener('scroll', onScroll, { passive: true });
-
-    // Listen to several events — some MP4s report duration late (durationchange)
-    ['loadedmetadata', 'durationchange', 'canplay'].forEach(function (evt) {
-        video.addEventListener(evt, onVideoReady);
-    });
-
-    // Fire immediately if already loaded
-    if (video.readyState >= 1) onVideoReady();
-
-    // Force the browser to start loading if it hasn't yet
-    if (video.readyState === 0) video.load();
+    if (video.readyState >= 1) {
+        start();
+    } else {
+        video.addEventListener('loadedmetadata', start, { once: true });
+        video.load();
+    }
 })();
 </script>
 @endpush
+
+</x-storefront>
 
