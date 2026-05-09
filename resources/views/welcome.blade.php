@@ -205,8 +205,7 @@
             >
                 <source src="/videos/videomp_.mp4" type="video/mp4">
             </video>
-            {{-- Gradient overlay — dark at edges, lighter in center so cards pop --}}
-            <div class="absolute inset-0 bg-gradient-to-b from-black/60 via-black/35 to-black/60"></div>
+            <div class="absolute inset-0 bg-black/40"></div>
         </div>
 
         <div class="relative max-w-6xl mx-auto px-4 py-10 space-y-14" style="z-index:10;">
