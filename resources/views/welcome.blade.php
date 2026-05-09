@@ -194,10 +194,10 @@
     </div>
 
     {{-- =========== PRODUCT GRID =========== --}}
-    <div id="products-scroll-section" class="relative" style="isolation:isolate;">
+    <div id="products-scroll-section">
 
-        {{-- Video background: absolutely positioned, JS keeps it pinned to viewport --}}
-        <div id="video-bg-container" class="absolute left-0 w-full pointer-events-none" style="top:0;height:100vh;z-index:0;will-change:transform;">
+        {{-- Video background: CSS sticky pins it to the viewport while section scrolls --}}
+        <div id="video-bg-container" class="left-0 w-full pointer-events-none" style="position:sticky;top:0;height:100vh;z-index:0;">
             <video
                 id="scroll-bg-video"
                 class="absolute inset-0 w-full h-full object-cover"
@@ -208,7 +208,8 @@
             <div class="absolute inset-0 bg-black/40"></div>
         </div>
 
-        <div class="relative max-w-6xl mx-auto px-4 py-10 space-y-14" style="z-index:10;">
+        {{-- margin-top:-100vh pulls products up to overlap the sticky video --}}
+        <div class="relative max-w-6xl mx-auto px-4 py-10 space-y-14" style="z-index:10;margin-top:-100vh;">
 
         @forelse ($categories as $category)
             @if ($category->activeProducts->isNotEmpty())
@@ -371,21 +372,15 @@
 <script>
 (function () {
     const video   = document.getElementById('scroll-bg-video');
-    const videoBg = document.getElementById('video-bg-container');
     const section = document.getElementById('products-scroll-section');
-    if (!videoBg || !section) return;
+    if (!video || !section) return;
 
-    let rafId        = null;
-    let targetTime   = 0;
-    let targetY      = 0;
-    let duration     = 0;
-    let videoReady   = false;
+    let rafId      = null;
+    let targetTime = 0;
+    let duration   = 0;
 
     function applyFrame() {
-        videoBg.style.transform = 'translateY(' + targetY + 'px)';
-        if (videoReady && duration > 0) {
-            video.currentTime = targetTime;
-        }
+        if (duration > 0) video.currentTime = targetTime;
         rafId = null;
     }
 
@@ -397,31 +392,25 @@
 
         const scrolled = Math.max(0, window.scrollY - sectionTop);
         const clamped  = Math.min(scrolled, scrollable);
-
-        targetY    = clamped;
-        targetTime = duration > 0 ? (clamped / scrollable) * duration : 0;
+        targetTime     = (clamped / scrollable) * duration;
 
         if (!rafId) rafId = requestAnimationFrame(applyFrame);
     }
 
-    // Add scroll listener immediately — do NOT wait for video
+    function onVideoMeta() {
+        duration = video.duration || 0;
+        video.pause();
+        video.currentTime = 0;
+        onScroll();
+    }
+
     window.addEventListener('scroll', onScroll, { passive: true });
     onScroll();
 
-    // Wire up video scrubbing separately once metadata is available
-    if (video) {
-        function onVideoMeta() {
-            duration   = video.duration || 0;
-            videoReady = true;
-            video.pause();
-            video.currentTime = 0;
-            onScroll();
-        }
-        if (video.readyState >= 1) {
-            onVideoMeta();
-        } else {
-            video.addEventListener('loadedmetadata', onVideoMeta, { once: true });
-        }
+    if (video.readyState >= 1) {
+        onVideoMeta();
+    } else {
+        video.addEventListener('loadedmetadata', onVideoMeta, { once: true });
     }
 })();
 </script>
