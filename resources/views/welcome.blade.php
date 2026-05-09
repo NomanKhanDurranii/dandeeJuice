@@ -251,7 +251,7 @@
                                     <div class="min-w-0">
                                         <h3 class="font-bold text-gray-900 text-sm leading-snug line-clamp-2 group-hover:text-red-700 transition-colors duration-200">{{ $product->name }}</h3>
                                         @if ($product->description)
-                                            <p class="text-gray-400 text-xs mt-0.5 line-clamp-3 leading-relaxed">{{ strip_tags($product->description) }}</p>
+                                            <p class="text-gray-400 text-xs mt-0.5 leading-relaxed">{{ \Illuminate\Support\Str::limit(strip_tags($product->description), 60) }}</p>
                                         @endif
                                     </div>
 
