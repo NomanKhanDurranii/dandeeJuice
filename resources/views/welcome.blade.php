@@ -242,12 +242,12 @@
                             @php $thumb = $product->getFirstMediaUrl('images'); @endphp
                             <a
                                 href="{{ route('product.show', $product->slug) }}"
-                                class="group bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-xl hover:-translate-y-1 hover:border-red-100 transition-all duration-300 flex overflow-hidden h-28"
+                                class="group bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-xl hover:-translate-y-1 hover:border-red-100 transition-all duration-300 flex overflow-hidden"
                                 data-product-card
                                 data-name="{{ $product->name }}"
                             >
                                 {{-- Left: text + price/action --}}
-                                <div class="flex-1 min-w-0 p-3 flex flex-col justify-between overflow-hidden">
+                                <div class="flex-1 min-w-0 p-3 flex flex-col justify-between overflow-hidden min-h-[6.5rem]">
                                     <div class="min-w-0">
                                         <h3 class="font-bold text-gray-900 text-sm leading-snug line-clamp-2 group-hover:text-red-700 transition-colors duration-200">{{ $product->name }}</h3>
                                         @if ($product->description)
@@ -279,8 +279,8 @@
                                     </div>
                                 </div>
 
-                                {{-- Right: fixed square image (112×112px) --}}
-                                <div class="w-28 flex-none bg-gray-100 relative overflow-hidden">
+                                {{-- Right: aspect-square locks height = width = 112px regardless of image natural size --}}
+                                <div class="w-28 shrink-0 aspect-square bg-gray-100 relative overflow-hidden">
                                     @if ($thumb)
                                         <img
                                             src="{{ $thumb }}"
