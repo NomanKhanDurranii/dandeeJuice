@@ -203,7 +203,7 @@
                 class="absolute inset-0 w-full h-full object-cover"
                 muted playsinline preload="auto"
             >
-                <source src="/videos/videomp_.mp4" type="video/mp4">
+                <source src="/videos/videomp_scrub.mp4" type="video/mp4">
             </video>
             <div class="absolute inset-0 bg-black/40"></div>
         </div>
