@@ -380,11 +380,13 @@
     let duration   = 0;
 
     function applyFrame() {
-        if (duration > 0) video.currentTime = targetTime;
+        video.currentTime = targetTime;
         rafId = null;
     }
 
     function onScroll() {
+        if (duration <= 0) return;
+
         const rect       = section.getBoundingClientRect();
         const sectionTop = window.scrollY + rect.top;
         const scrollable = section.offsetHeight - window.innerHeight;
@@ -397,21 +399,27 @@
         if (!rafId) rafId = requestAnimationFrame(applyFrame);
     }
 
-    function onVideoMeta() {
-        duration = video.duration || 0;
+    function onVideoReady() {
+        const d = video.duration;
+        if (!d || !isFinite(d) || d <= 0) return; // not ready yet, wait for next event
+        duration = d;
         video.pause();
         video.currentTime = 0;
-        onScroll();
+        onScroll(); // sync to current scroll position
     }
 
     window.addEventListener('scroll', onScroll, { passive: true });
-    onScroll();
 
-    if (video.readyState >= 1) {
-        onVideoMeta();
-    } else {
-        video.addEventListener('loadedmetadata', onVideoMeta, { once: true });
-    }
+    // Listen to several events — some MP4s report duration late (durationchange)
+    ['loadedmetadata', 'durationchange', 'canplay'].forEach(function (evt) {
+        video.addEventListener(evt, onVideoReady);
+    });
+
+    // Fire immediately if already loaded
+    if (video.readyState >= 1) onVideoReady();
+
+    // Force the browser to start loading if it hasn't yet
+    if (video.readyState === 0) video.load();
 })();
 </script>
 @endpush
