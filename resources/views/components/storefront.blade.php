@@ -71,7 +71,7 @@
 
             {{-- LEFT --}}
             <div class="flex items-center gap-4 flex-1 min-w-0">
-                <button x-data @click="Livewire.dispatch('location-modal:show')"
+                <button @click="Livewire.dispatch('location-modal:show')"
                         class="hidden sm:flex items-center gap-1.5 text-sm text-gray-600 hover:text-red-600 transition-colors duration-200 cursor-pointer shrink-0">
                     <svg class="w-4 h-4 text-red-500 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z"/>
@@ -94,7 +94,7 @@
             {{-- CENTER: Logo --}}
             <div class="absolute left-1/2 -translate-x-1/2">
                 <a href="{{ route('home') }}" class="hover:opacity-80 transition-opacity duration-200 block">
-                    <img src="/android-chrome-192x192.png" alt="DandeeJuice" class="h-9 w-auto">
+                    <img src="/android-chrome-192x192.png" alt="DandeeJuice" class="h-12 w-auto">
                 </a>
             </div>
 
@@ -158,7 +158,7 @@
              x-transition:leave-end="opacity-0 -translate-y-1"
              class="sm:hidden bg-white border-t border-gray-100 px-4 py-3 space-y-1">
 
-            <button x-data @click="Livewire.dispatch('location-modal:show'); menuOpen = false"
+            <button @click="Livewire.dispatch('location-modal:show'); menuOpen = false"
                     class="flex items-center gap-2 w-full px-3 py-2.5 rounded-lg text-sm font-medium text-gray-700 hover:bg-red-50 hover:text-red-700 transition-colors">
                 <svg class="w-4 h-4 text-red-500 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z"/>

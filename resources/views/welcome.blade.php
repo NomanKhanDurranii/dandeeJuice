@@ -12,7 +12,7 @@
             activeId: null,
             canLeft: false,
             canRight: false,
-            stickyH: 130,
+            stickyH: 140,
             init() {
                 this.$nextTick(() => {
                     this.sync();
@@ -77,7 +77,7 @@
             nudgeLeft()  { this.$refs.rail.scrollBy({ left: -260, behavior: 'smooth' }); },
             nudgeRight() { this.$refs.rail.scrollBy({ left:  260, behavior: 'smooth' }); },
         }"
-        class="bg-white sticky top-[4.5rem] z-20 shadow-sm border-b border-gray-100"
+        class="bg-white sticky top-[5.5rem] z-20 shadow-sm border-b border-gray-100"
     >
 
         {{-- Category row --}}
@@ -213,7 +213,7 @@
 
         @forelse ($categories as $category)
             @if ($category->activeProducts->isNotEmpty())
-                <section id="cat-{{ $category->id }}" data-category-section style="scroll-margin-top: 7.5rem">
+                <section id="cat-{{ $category->id }}" data-category-section style="scroll-margin-top: 9rem">
                     <div class="flex items-stretch mb-8 rounded-2xl overflow-hidden shadow-2xl">
                         {{-- Red left block with vertical label --}}
                         <div class="bg-gradient-to-b from-red-500 to-red-700 flex items-center justify-center px-3 shrink-0">
@@ -247,7 +247,7 @@
                                 data-name="{{ $product->name }}"
                             >
                                 {{-- Left: text + price/action --}}
-                                <div class="flex-1 min-w-0 p-3 flex flex-col justify-between overflow-hidden min-h-[6.5rem]">
+                                <div class="flex-1 min-w-0 p-4 flex flex-col justify-between overflow-hidden min-h-[170px]">
                                     <div class="min-w-0">
                                         <h3 class="font-bold text-gray-900 text-sm leading-snug line-clamp-2 group-hover:text-red-700 transition-colors duration-200">{{ $product->name }}</h3>
                                         @if ($product->description)
@@ -280,7 +280,7 @@
                                 </div>
 
                                 {{-- Right: aspect-square locks height = width = 112px regardless of image natural size --}}
-                                <div class="w-28 shrink-0 aspect-square bg-gray-100 relative overflow-hidden">
+                                <div class="w-[170px] shrink-0 aspect-square bg-gray-100 relative overflow-hidden">
                                     @if ($thumb)
                                         <img
                                             src="{{ $thumb }}"
