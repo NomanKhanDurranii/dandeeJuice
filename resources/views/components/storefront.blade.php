@@ -24,8 +24,27 @@
     {{-- Location modal (blocks until Delivery/Pickup chosen) --}}
     @livewire('location-modal')
 
+    {{-- =========== MARQUEE STRIP =========== --}}
+    <div class="sticky top-0 z-30">
+    <div class="bg-red-600 overflow-hidden py-1.5">
+        <style>
+            @keyframes marquee-scroll {
+                from { transform: translateX(0); }
+                to   { transform: translateX(-50%); }
+            }
+            .marquee-track { display:flex; width:max-content; animation: marquee-scroll 30s linear infinite; }
+            .marquee-track:hover { animation-play-state: paused; }
+        </style>
+        <div class="marquee-track">
+            @php $strip = '&nbsp;&nbsp;🍔&nbsp; Freshly Made Every Day &nbsp;•&nbsp; 🧃 Cold-Pressed Juices &nbsp;•&nbsp; 🛵 Fast Home Delivery &nbsp;•&nbsp; ⭐ Best in Town &nbsp;•&nbsp; 🎉 Catering Available — Call Now!&nbsp;&nbsp;&nbsp;&nbsp;'; @endphp
+            <span class="text-xs font-semibold text-white tracking-wide whitespace-nowrap">{!! $strip !!}</span>
+            <span class="text-xs font-semibold text-white tracking-wide whitespace-nowrap">{!! $strip !!}</span>
+            <span class="text-xs font-semibold text-white tracking-wide whitespace-nowrap">{!! $strip !!}</span>
+        </div>
+    </div>
+
     {{-- =========== NAVBAR =========== --}}
-    <nav x-data="{ menuOpen: false }" class="sticky top-0 z-30 bg-white border-b border-gray-100 shadow-sm">
+    <nav x-data="{ menuOpen: false }" class="bg-white border-b border-gray-100 shadow-sm">
 
         {{-- Main row --}}
         <div class="max-w-7xl mx-auto px-4 h-[4.5rem] flex items-center justify-between sm:grid sm:grid-cols-3">
@@ -76,7 +95,7 @@
             {{-- Center: Logo --}}
             <div class="flex sm:justify-center">
                 <a href="{{ route('home') }}" class="hover:opacity-80 transition">
-                    <img src="/android-chrome-192x192.png" alt="DandeeJuice" class="h-16 w-auto">
+                    <img src="/android-chrome-192x192.png" alt="DandeeJuice" class="h-20 w-auto">
                 </a>
             </div>
 
@@ -205,8 +224,9 @@
         </div>
 
         {{-- Bottom accent line --}}
-        <div class="h-1 bg-red-600"></div>
+        <div class="h-0.5 bg-gradient-to-r from-red-600 via-red-400 to-red-600"></div>
     </nav>
+    </div>{{-- end sticky wrapper --}}
 
     <main>{{ $slot }}</main>
 
