@@ -373,15 +373,19 @@
     const video   = document.getElementById('scroll-bg-video');
     const videoBg = document.getElementById('video-bg-container');
     const section = document.getElementById('products-scroll-section');
-    if (!video || !videoBg || !section) return;
+    if (!videoBg || !section) return;
 
-    let rafId      = null;
-    let targetTime = 0;
-    let targetY    = 0;
+    let rafId        = null;
+    let targetTime   = 0;
+    let targetY      = 0;
+    let duration     = 0;
+    let videoReady   = false;
 
     function applyFrame() {
-        if (video.readyState >= 1) video.currentTime = targetTime;
         videoBg.style.transform = 'translateY(' + targetY + 'px)';
+        if (videoReady && duration > 0) {
+            video.currentTime = targetTime;
+        }
         rafId = null;
     }
 
@@ -394,23 +398,30 @@
         const scrolled = Math.max(0, window.scrollY - sectionTop);
         const clamped  = Math.min(scrolled, scrollable);
 
-        targetTime = (clamped / scrollable) * (video.duration || 0);
         targetY    = clamped;
+        targetTime = duration > 0 ? (clamped / scrollable) * duration : 0;
 
         if (!rafId) rafId = requestAnimationFrame(applyFrame);
     }
 
-    function init() {
-        video.pause();
-        video.currentTime = 0;
-        window.addEventListener('scroll', onScroll, { passive: true });
-        onScroll();
-    }
+    // Add scroll listener immediately — do NOT wait for video
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
 
-    if (video.readyState >= 1) {
-        init();
-    } else {
-        video.addEventListener('loadedmetadata', init, { once: true });
+    // Wire up video scrubbing separately once metadata is available
+    if (video) {
+        function onVideoMeta() {
+            duration   = video.duration || 0;
+            videoReady = true;
+            video.pause();
+            video.currentTime = 0;
+            onScroll();
+        }
+        if (video.readyState >= 1) {
+            onVideoMeta();
+        } else {
+            video.addEventListener('loadedmetadata', onVideoMeta, { once: true });
+        }
     }
 })();
 </script>
