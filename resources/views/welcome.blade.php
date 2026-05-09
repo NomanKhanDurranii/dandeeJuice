@@ -194,7 +194,22 @@
     </div>
 
     {{-- =========== PRODUCT GRID =========== --}}
-    <div class="max-w-6xl mx-auto px-4 py-10 space-y-14">
+    <div id="products-scroll-section" class="relative">
+
+        {{-- Scroll-scrubbed video background --}}
+        <div class="sticky top-0 h-screen w-full overflow-hidden pointer-events-none" style="margin-bottom:-100vh;z-index:0;">
+            <video
+                id="scroll-bg-video"
+                class="absolute inset-0 w-full h-full object-cover"
+                muted playsinline preload="auto"
+            >
+                <source src="/videos/videomp_.mp4" type="video/mp4">
+            </video>
+            {{-- Gradient overlay — dark at edges, lighter in center so cards pop --}}
+            <div class="absolute inset-0 bg-gradient-to-b from-black/60 via-black/35 to-black/60"></div>
+        </div>
+
+        <div class="relative max-w-6xl mx-auto px-4 py-10 space-y-14" style="z-index:10;">
 
         @forelse ($categories as $category)
             @if ($category->activeProducts->isNotEmpty())
@@ -292,7 +307,9 @@
             </div>
         @endforelse
 
-    </div>
+        </div>{{-- end inner max-w-6xl --}}
+
+    </div>{{-- end #products-scroll-section --}}
 
     {{-- =========== INFO STRIP =========== --}}
     <section class="mt-10 bg-gray-100">
@@ -350,4 +367,49 @@
     </section>
 
 </x-storefront>
+
+@push('scripts')
+<script>
+(function () {
+    const video   = document.getElementById('scroll-bg-video');
+    const section = document.getElementById('products-scroll-section');
+    if (!video || !section) return;
+
+    let rafId     = null;
+    let targetTime = 0;
+
+    function applyTime() {
+        if (video.readyState >= 1) video.currentTime = targetTime;
+        rafId = null;
+    }
+
+    function onScroll() {
+        const rect        = section.getBoundingClientRect();
+        const sectionTop  = window.scrollY + rect.top;
+        const scrollable  = section.offsetHeight - window.innerHeight;
+        if (scrollable <= 0) return;
+
+        const scrolled  = Math.max(0, window.scrollY - sectionTop);
+        const progress  = Math.min(1, scrolled / scrollable);
+        targetTime      = progress * (video.duration || 0);
+
+        if (!rafId) rafId = requestAnimationFrame(applyTime);
+    }
+
+    // Start as soon as metadata is available
+    function init() {
+        video.pause();
+        video.currentTime = 0;
+        window.addEventListener('scroll', onScroll, { passive: true });
+        onScroll();
+    }
+
+    if (video.readyState >= 1) {
+        init();
+    } else {
+        video.addEventListener('loadedmetadata', init, { once: true });
+    }
+})();
+</script>
+@endpush
 
