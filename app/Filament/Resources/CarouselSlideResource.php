@@ -35,11 +35,8 @@ class CarouselSlideResource extends Resource
                 ->collection('slide')
                 ->disk('public')
                 ->image()
-                ->imageResizeMode('cover')
-                ->imageCropAspectRatio('16:5')
-                ->imageResizeTargetWidth('1920')
-                ->imageResizeTargetHeight('600')
-                ->helperText('Recommended: 1920×600 px, 16:5 ratio. Image will be cropped to fit.')
+                ->imageMinWidth(800)
+                ->helperText('Minimum width: 800px. Wider images (1920×600 recommended) look best.')
                 ->columnSpanFull(),
 
             TextInput::make('title')
@@ -79,7 +76,7 @@ class CarouselSlideResource extends Resource
                     ->collection('slide')
                     ->conversion('banner')
                     ->width(160)
-                    ->height(50),
+                    ->imageHeight(50),
                 TextColumn::make('title')->searchable()->limit(40),
                 TextColumn::make('subtitle')->limit(50)->toggleable(),
                 TextColumn::make('order_column')->label('Order')->sortable(),
