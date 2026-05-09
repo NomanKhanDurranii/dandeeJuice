@@ -35,8 +35,7 @@ class CarouselSlideResource extends Resource
                 ->collection('slide')
                 ->disk('public')
                 ->image()
-                ->imageMinWidth(800)
-                ->helperText('Minimum width: 800px. Wider images (1920×600 recommended) look best.')
+                ->helperText('Wider images look best — 1920×600 px recommended.')
                 ->columnSpanFull(),
 
             TextInput::make('title')
