@@ -58,102 +58,82 @@
     </div>
 
     {{-- =========== NAVBAR =========== --}}
-    <nav x-data="{ menuOpen: false }" class="bg-white shadow-sm">
+    <nav x-data="{ menuOpen: false }" class="bg-white border-b border-gray-100">
         @php
             $orderType    = session('order_type');
             $zoneName     = session('delivery_zone_name', '');
             $whatsapp     = \App\Models\Setting::get('whatsapp_number', '923001234567');
             $displayPhone = '+' . substr($whatsapp, 0, 2) . ' ' . substr($whatsapp, 2, 3) . ' ' . substr($whatsapp, 5, 7);
+            $locationLabel = $orderType === 'delivery' ? $zoneName : ($orderType === 'pickup' ? 'Our Store' : 'Select');
         @endphp
 
-        {{-- ── Main bar ── --}}
-        <div class="max-w-7xl mx-auto px-5 h-[4.75rem] flex items-center gap-4">
+        <div class="max-w-7xl mx-auto px-5 h-14 flex items-center">
 
-            {{-- LEFT: location + divider + contact --}}
-            <div class="hidden sm:flex items-center gap-1 flex-1">
-
-                {{-- Location pill --}}
+            {{-- LEFT --}}
+            <div class="flex items-center gap-4 flex-1 min-w-0">
                 <button x-data @click="Livewire.dispatch('location-modal:show')"
-                        class="group flex items-center gap-2.5 px-3 py-2 rounded-xl hover:bg-red-50 transition-colors duration-200 cursor-pointer">
-                    <div class="w-8 h-8 rounded-lg bg-red-100 group-hover:bg-red-200 flex items-center justify-center transition-colors shrink-0">
-                        <svg class="w-4 h-4 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z"/>
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z"/>
-                        </svg>
-                    </div>
-                    <div class="text-left leading-none">
-                        <p class="text-[9px] font-bold text-gray-400 uppercase tracking-[0.15em] mb-0.5">
-                            {{ $orderType === 'delivery' ? 'Delivering to' : ($orderType === 'pickup' ? 'Pickup' : 'Order Type') }}
-                        </p>
-                        <p class="text-[13px] font-bold text-gray-800 group-hover:text-red-600 transition-colors truncate max-w-[110px]">
-                            {{ $orderType === 'delivery' ? $zoneName : ($orderType === 'pickup' ? 'Our Store' : 'Select Location') }}
-                        </p>
-                    </div>
+                        class="hidden sm:flex items-center gap-1.5 text-sm text-gray-600 hover:text-red-600 transition-colors duration-200 cursor-pointer shrink-0">
+                    <svg class="w-4 h-4 text-red-500 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z"/>
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z"/>
+                    </svg>
+                    <span class="font-semibold truncate max-w-[100px]">{{ $locationLabel }}</span>
                 </button>
 
-                {{-- Slim divider --}}
-                <div class="hidden md:block w-px h-7 bg-gray-200 mx-1"></div>
+                <span class="hidden md:block w-px h-4 bg-gray-200 shrink-0"></span>
 
-                {{-- Contact pill --}}
                 <a href="tel:+{{ $whatsapp }}"
-                   class="hidden md:flex group items-center gap-2.5 px-3 py-2 rounded-xl hover:bg-green-50 transition-colors duration-200">
-                    <div class="w-8 h-8 rounded-lg bg-green-100 group-hover:bg-green-200 flex items-center justify-center transition-colors shrink-0">
-                        <svg class="w-4 h-4 text-green-700" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 002.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 01-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 00-1.091-.852H4.5A2.25 2.25 0 002.25 4.5v2.25z"/>
-                        </svg>
-                    </div>
-                    <div class="text-left leading-none">
-                        <p class="text-[9px] font-bold text-gray-400 uppercase tracking-[0.15em] mb-0.5">Contact Us</p>
-                        <p class="text-[13px] font-bold text-gray-800 group-hover:text-green-700 transition-colors">{{ $displayPhone }}</p>
-                    </div>
+                   class="hidden md:flex items-center gap-1.5 text-sm text-gray-500 hover:text-green-700 transition-colors duration-200 shrink-0">
+                    <svg class="w-4 h-4 text-green-600 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 002.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 01-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 00-1.091-.852H4.5A2.25 2.25 0 002.25 4.5v2.25z"/>
+                    </svg>
+                    <span class="font-medium">{{ $displayPhone }}</span>
                 </a>
             </div>
 
             {{-- CENTER: Logo --}}
-            <div class="flex-1 flex sm:justify-center">
-                <a href="{{ route('home') }}" class="hover:opacity-75 transition-opacity duration-200">
-                    <img src="/android-chrome-192x192.png" alt="DandeeJuice" class="h-11 w-auto">
+            <div class="absolute left-1/2 -translate-x-1/2">
+                <a href="{{ route('home') }}" class="hover:opacity-80 transition-opacity duration-200 block">
+                    <img src="/android-chrome-192x192.png" alt="DandeeJuice" class="h-9 w-auto">
                 </a>
             </div>
 
-            {{-- RIGHT: auth links + cart + hamburger --}}
-            <div class="flex-1 flex items-center justify-end gap-1.5">
-
+            {{-- RIGHT --}}
+            <div class="flex items-center gap-1 flex-1 justify-end">
                 @auth
                     <a href="{{ route('my-orders') }}"
-                       class="hidden sm:flex items-center gap-1.5 px-3 py-2 rounded-xl text-[13px] font-semibold text-gray-600 hover:text-gray-900 hover:bg-gray-100 transition-colors duration-200">
+                       class="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-100 transition-colors duration-200">
                         <svg class="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
                         </svg>
-                        <span class="hidden lg:inline">My Orders</span>
+                        My Orders
                     </a>
                     <form method="POST" action="{{ route('logout') }}">
                         @csrf
-                        <button class="hidden sm:flex items-center gap-1.5 px-3 py-2 rounded-xl text-[13px] font-semibold text-gray-400 hover:text-red-600 hover:bg-red-50 transition-colors duration-200">
+                        <button class="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium text-gray-400 hover:text-red-600 hover:bg-red-50 transition-colors duration-200">
                             <svg class="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15m3 0l3-3m0 0l-3-3m3 3H9"/>
                             </svg>
-                            <span class="hidden lg:inline">Logout</span>
+                            Logout
                         </button>
                     </form>
                 @else
                     <a href="{{ route('login') }}"
-                       class="hidden sm:flex items-center gap-1.5 px-3 py-2 rounded-xl text-[13px] font-semibold text-gray-600 hover:text-gray-900 hover:bg-gray-100 transition-colors duration-200">
+                       class="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-100 transition-colors duration-200">
                         <svg class="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"/>
                         </svg>
-                        <span class="hidden lg:inline">Login</span>
+                        Login
                     </a>
                 @endauth
 
-                {{-- Slim divider before cart --}}
-                <div class="hidden sm:block w-px h-6 bg-gray-200 mx-1"></div>
+                <div class="hidden sm:block w-px h-5 bg-gray-200 mx-1"></div>
 
                 @livewire('cart-slide-over-trigger')
 
-                {{-- Hamburger — mobile only --}}
+                {{-- Hamburger --}}
                 <button @click="menuOpen = !menuOpen"
-                        class="sm:hidden w-9 h-9 flex items-center justify-center rounded-xl border border-gray-200 text-gray-500 hover:border-red-300 hover:text-red-600 hover:bg-red-50 transition-all duration-200"
+                        class="sm:hidden w-9 h-9 flex items-center justify-center rounded-lg text-gray-500 hover:text-red-600 hover:bg-red-50 transition-all duration-200 ml-1"
                         aria-label="Toggle menu">
                     <svg x-show="!menuOpen" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/>
@@ -165,64 +145,65 @@
             </div>
         </div>
 
-        {{-- Bottom accent --}}
-        <div class="h-px bg-gradient-to-r from-transparent via-red-500 to-transparent"></div>
+        {{-- Bottom accent line --}}
+        <div class="h-px bg-gradient-to-r from-transparent via-red-400 to-transparent"></div>
 
-        {{-- ── Mobile dropdown ── --}}
+        {{-- Mobile dropdown --}}
         <div x-show="menuOpen" x-cloak
              x-transition:enter="transition ease-out duration-200"
-             x-transition:enter-start="opacity-0 -translate-y-2"
+             x-transition:enter-start="opacity-0 -translate-y-1"
              x-transition:enter-end="opacity-100 translate-y-0"
              x-transition:leave="transition ease-in duration-150"
              x-transition:leave-start="opacity-100 translate-y-0"
-             x-transition:leave-end="opacity-0 -translate-y-2"
-             class="sm:hidden border-t border-gray-100 bg-white">
+             x-transition:leave-end="opacity-0 -translate-y-1"
+             class="sm:hidden bg-white border-t border-gray-100 px-4 py-3 space-y-1">
 
-            {{-- Nav links --}}
-            <div class="px-4 pt-3 pb-2 space-y-0.5">
-                <p class="text-[9px] font-black text-gray-400 uppercase tracking-[0.25em] px-3 pb-1">Navigate</p>
-                @foreach ([['route' => 'home','label' => 'Home','path' => 'M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25'], ['route' => 'about','label' => 'About Us','path' => 'M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z'], ['route' => 'catering','label' => 'Catering Service','path' => 'M9.75 3.104v5.714a2.25 2.25 0 01-.659 1.591L5 14.5M9.75 3.104c-.251.023-.501.05-.75.082m.75-.082a24.301 24.301 0 014.5 0m0 0v5.714c0 .597.237 1.17.659 1.591L19.8 15.3M14.25 3.104c.251.023.501.05.75.082M19.8 15.3l-1.57.393A9.065 9.065 0 0112 15a9.065 9.065 0 00-6.23-.693L5 14.5m14.8.8l1.402 1.402c1 1 .316 2.702-1.067 2.702H4.865c-1.383 0-2.067-1.702-1.067-2.702L5 14.5'], ['route' => 'contact','label' => 'Contact Us','path' => 'M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 002.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 01-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 00-1.091-.852H4.5A2.25 2.25 0 002.25 4.5v2.25z']] as $nav)
-                    <a href="{{ route($nav['route']) }}" @click="menuOpen = false"
-                       class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold text-gray-700 hover:bg-red-50 hover:text-red-700 transition-colors duration-150">
-                        <svg class="w-4 h-4 text-red-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="{{ $nav['path'] }}"/>
-                        </svg>
-                        {{ $nav['label'] }}
-                    </a>
-                @endforeach
-            </div>
+            <button x-data @click="Livewire.dispatch('location-modal:show'); menuOpen = false"
+                    class="flex items-center gap-2 w-full px-3 py-2.5 rounded-lg text-sm font-medium text-gray-700 hover:bg-red-50 hover:text-red-700 transition-colors">
+                <svg class="w-4 h-4 text-red-500 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z"/>
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z"/>
+                </svg>
+                {{ $locationLabel }}
+            </button>
 
-            {{-- Account section --}}
-            <div class="px-4 pt-2 pb-4 space-y-0.5 border-t border-gray-100 mt-1">
-                <p class="text-[9px] font-black text-gray-400 uppercase tracking-[0.25em] px-3 pb-1">Account</p>
-                @auth
-                    <a href="{{ route('my-orders') }}" @click="menuOpen = false"
-                       class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold text-gray-700 hover:bg-red-50 hover:text-red-700 transition-colors duration-150">
-                        <svg class="w-4 h-4 text-red-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
-                        </svg>
-                        My Orders
-                    </a>
-                    <form method="POST" action="{{ route('logout') }}">
-                        @csrf
-                        <button type="submit" @click="menuOpen = false"
-                                class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold text-red-600 hover:bg-red-50 transition-colors duration-150">
-                            <svg class="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15m3 0l3-3m0 0l-3-3m3 3H9"/>
-                            </svg>
-                            Logout
-                        </button>
-                    </form>
-                @else
-                    <a href="{{ route('login') }}" @click="menuOpen = false"
-                       class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-bold text-white bg-red-600 hover:bg-red-700 transition-colors duration-150">
+            <a href="tel:+{{ $whatsapp }}"
+               class="flex items-center gap-2 px-3 py-2.5 rounded-lg text-sm font-medium text-gray-700 hover:bg-green-50 hover:text-green-700 transition-colors">
+                <svg class="w-4 h-4 text-green-600 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 002.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 01-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 00-1.091-.852H4.5A2.25 2.25 0 002.25 4.5v2.25z"/>
+                </svg>
+                {{ $displayPhone }}
+            </a>
+
+            <div class="border-t border-gray-100 my-1"></div>
+
+            @auth
+                <a href="{{ route('my-orders') }}" @click="menuOpen = false"
+                   class="flex items-center gap-2 px-3 py-2.5 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-100 transition-colors">
+                    <svg class="w-4 h-4 text-gray-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
+                    </svg>
+                    My Orders
+                </a>
+                <form method="POST" action="{{ route('logout') }}">
+                    @csrf
+                    <button type="submit" @click="menuOpen = false"
+                            class="w-full flex items-center gap-2 px-3 py-2.5 rounded-lg text-sm font-medium text-red-600 hover:bg-red-50 transition-colors">
                         <svg class="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"/>
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15m3 0l3-3m0 0l-3-3m3 3H9"/>
                         </svg>
-                        Login / Sign Up
-                    </a>
-                @endauth
-            </div>
+                        Logout
+                    </button>
+                </form>
+            @else
+                <a href="{{ route('login') }}" @click="menuOpen = false"
+                   class="flex items-center gap-2 px-3 py-2.5 rounded-lg text-sm font-bold text-white bg-red-600 hover:bg-red-700 transition-colors">
+                    <svg class="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"/>
+                    </svg>
+                    Login / Sign Up
+                </a>
+            @endauth
         </div>
     </nav>
     </div>{{-- end sticky wrapper --}}
