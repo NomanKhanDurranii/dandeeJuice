@@ -194,10 +194,10 @@
     </div>
 
     {{-- =========== PRODUCT GRID =========== --}}
-    <div id="products-scroll-section" class="relative">
+    <div id="products-scroll-section" class="relative" style="isolation:isolate;">
 
-        {{-- Scroll-scrubbed video background --}}
-        <div class="sticky top-0 h-screen w-full overflow-hidden pointer-events-none" style="margin-bottom:-100vh;z-index:0;">
+        {{-- Video background: absolutely positioned, JS keeps it pinned to viewport --}}
+        <div id="video-bg-container" class="absolute left-0 w-full pointer-events-none" style="top:0;height:100vh;z-index:0;will-change:transform;">
             <video
                 id="scroll-bg-video"
                 class="absolute inset-0 w-full h-full object-cover"
@@ -371,31 +371,35 @@
 <script>
 (function () {
     const video   = document.getElementById('scroll-bg-video');
+    const videoBg = document.getElementById('video-bg-container');
     const section = document.getElementById('products-scroll-section');
-    if (!video || !section) return;
+    if (!video || !videoBg || !section) return;
 
-    let rafId     = null;
+    let rafId      = null;
     let targetTime = 0;
+    let targetY    = 0;
 
-    function applyTime() {
+    function applyFrame() {
         if (video.readyState >= 1) video.currentTime = targetTime;
+        videoBg.style.transform = 'translateY(' + targetY + 'px)';
         rafId = null;
     }
 
     function onScroll() {
-        const rect        = section.getBoundingClientRect();
-        const sectionTop  = window.scrollY + rect.top;
-        const scrollable  = section.offsetHeight - window.innerHeight;
+        const rect       = section.getBoundingClientRect();
+        const sectionTop = window.scrollY + rect.top;
+        const scrollable = section.offsetHeight - window.innerHeight;
         if (scrollable <= 0) return;
 
-        const scrolled  = Math.max(0, window.scrollY - sectionTop);
-        const progress  = Math.min(1, scrolled / scrollable);
-        targetTime      = progress * (video.duration || 0);
+        const scrolled = Math.max(0, window.scrollY - sectionTop);
+        const clamped  = Math.min(scrolled, scrollable);
 
-        if (!rafId) rafId = requestAnimationFrame(applyTime);
+        targetTime = (clamped / scrollable) * (video.duration || 0);
+        targetY    = clamped;
+
+        if (!rafId) rafId = requestAnimationFrame(applyFrame);
     }
 
-    // Start as soon as metadata is available
     function init() {
         video.pause();
         video.currentTime = 0;
