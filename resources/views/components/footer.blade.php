@@ -1,6 +1,7 @@
 @php
     $whatsapp = \App\Models\Setting::get('whatsapp_number', '923001234567');
     $address  = \App\Models\Setting::get('store_address', '');
+    $branches = \App\Models\Branch::activeOrdered()->get();
 @endphp
 
 <footer class="bg-brand-gradient text-white">
@@ -63,17 +64,48 @@
                 <li><a href="{{ route('refund-policy') }}" class="text-white/80 hover:text-white transition">Refund Policy</a></li>
             </ul>
 
-            @if ($address)
-            <div class="flex items-start gap-2 text-white/70 text-xs leading-relaxed">
-                <svg class="w-4 h-4 shrink-0 mt-0.5 text-white/50" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z"/>
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z"/>
-                </svg>
-                <span>{{ $address }}</span>
-            </div>
+            {{-- Branches (dynamic) --}}
+            @if ($branches->isNotEmpty())
+                <h4 class="text-xs font-bold uppercase tracking-widest text-white/60 mb-3">Our Locations</h4>
+                <div class="space-y-4">
+                    @foreach ($branches as $branch)
+                        <div>
+                            <p class="text-white/90 text-xs font-semibold">{{ $branch->name }}</p>
+                            <p class="text-white/60 text-xs leading-relaxed mt-0.5">{{ $branch->address }}</p>
+                            <div class="flex items-center gap-3 mt-1.5 flex-wrap">
+                                @if ($branch->phone)
+                                    <a href="tel:{{ preg_replace('/\s+/', '', $branch->phone) }}"
+                                       class="inline-flex items-center gap-1 text-white/70 hover:text-white text-xs transition">
+                                        <svg class="w-3 h-3 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 002.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 01-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 00-1.091-.852H4.5A2.25 2.25 0 002.25 4.5v2.25z"/>
+                                        </svg>
+                                        {{ $branch->phone }}
+                                    </a>
+                                @endif
+                                <a href="{{ $branch->mapsUrl() }}" target="_blank"
+                                   class="inline-flex items-center gap-1 text-white/70 hover:text-white text-xs transition">
+                                    <svg class="w-3 h-3 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z"/>
+                                    </svg>
+                                    Map
+                                </a>
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+            @elseif ($address)
+                {{-- Fallback to settings if no branches --}}
+                <div class="flex items-start gap-2 text-white/70 text-xs leading-relaxed">
+                    <svg class="w-4 h-4 shrink-0 mt-0.5 text-white/50" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z"/>
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z"/>
+                    </svg>
+                    <span>{{ $address }}</span>
+                </div>
             @endif
 
-            <div class="flex items-center gap-2 text-white/70 text-xs mt-2">
+            <div class="flex items-center gap-2 text-white/70 text-xs mt-4">
                 <svg class="w-4 h-4 shrink-0 text-white/50" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z"/>
                 </svg>

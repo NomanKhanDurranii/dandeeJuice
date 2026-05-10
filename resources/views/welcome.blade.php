@@ -194,111 +194,122 @@
     </div>
 
     {{-- =========== PRODUCT GRID =========== --}}
-    <div id="products-scroll-section">
+    {{-- Static background image; each category gets its own max-w container so the
+         mid-section video can bleed full-width naturally between them. --}}
+    <div id="products-scroll-section"
+         style="background-image: url('/images/background.png'); background-size: cover; background-position: center;">
 
-        {{-- Video background: CSS sticky pins it to the viewport while section scrolls --}}
-        <div id="video-bg-container" class="left-0 w-full pointer-events-none" style="position:sticky;top:0;height:100vh;z-index:0;">
-            <video
-                id="scroll-bg-video"
-                class="absolute inset-0 w-full h-full object-cover"
-                muted playsinline preload="auto"
-            >
-                <source src="/videos/b_final_scrub.mp4" type="video/mp4">
-            </video>
-            <div class="absolute inset-0 bg-black/10"></div>
-        </div>
-
-        {{-- margin-top:-100vh pulls products up to overlap the sticky video --}}
-        <div class="relative max-w-6xl mx-auto px-4 py-10 space-y-14" style="z-index:10;margin-top:-100vh;">
+        @php $renderedCatCount = 0; @endphp
 
         @forelse ($categories as $category)
             @if ($category->activeProducts->isNotEmpty())
-                <section id="cat-{{ $category->id }}" data-category-section style="scroll-margin-top: 9rem">
-                    <div class="flex items-stretch mb-8 rounded-2xl overflow-hidden shadow-2xl">
-                        {{-- Red left block with vertical label --}}
-                        <div class="bg-brand-gradient flex items-center justify-center px-3 shrink-0">
-                            <span class="text-white text-[9px] font-black uppercase tracking-[0.2em]"
-                                  style="writing-mode:vertical-rl;transform:rotate(180deg);">MENU</span>
+                @php $renderedCatCount++; @endphp
+
+                {{-- Each category in its own constrained wrapper --}}
+                <div class="max-w-6xl mx-auto px-4 {{ $renderedCatCount === 1 ? 'pt-10' : 'pt-14' }}">
+                    <section
+                        id="cat-{{ $category->id }}"
+                        data-category-section
+                        style="scroll-margin-top: 9rem"
+                    >
+                        {{-- Category header --}}
+                        <div class="flex items-stretch mb-8 rounded-2xl overflow-hidden shadow-2xl">
+                            <div class="bg-brand-gradient flex items-center justify-center px-3 shrink-0">
+                                <span class="text-white text-[9px] font-black uppercase tracking-[0.2em]"
+                                      style="writing-mode:vertical-rl;transform:rotate(180deg);">MENU</span>
+                            </div>
+                            <div class="bg-white flex-1 min-w-0 px-5 py-4">
+                                <p class="text-[9px] font-extrabold text-red-500 uppercase tracking-[0.35em] mb-1">Our Menu</p>
+                                <h2 class="leading-tight font-bold text-gray-900 truncate"
+                                    style="font-family:'Playfair Display',Georgia,serif; font-style:italic; font-size:1.6rem; letter-spacing:-0.01em;">
+                                    {{ $category->name }}
+                                </h2>
+                            </div>
+                            <div class="bg-gray-900 flex flex-col items-center justify-center px-6 shrink-0 gap-0.5">
+                                <span class="text-3xl font-black text-white leading-none">{{ $category->activeProducts->count() }}</span>
+                                <span class="text-[9px] uppercase tracking-widest text-gray-300 font-bold">items</span>
+                            </div>
                         </div>
 
-                        {{-- White content --}}
-                        <div class="bg-white flex-1 min-w-0 px-5 py-4">
-                            <p class="text-[9px] font-extrabold text-red-500 uppercase tracking-[0.35em] mb-1">Our Menu</p>
-                            <h2 class="leading-tight font-bold text-gray-900 truncate"
-                                style="font-family:'Playfair Display',Georgia,serif; font-style:italic; font-size:1.6rem; letter-spacing:-0.01em;">
-                                {{ $category->name }}
-                            </h2>
-                        </div>
+                        {{-- Product grid --}}
+                        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+                            @foreach ($category->activeProducts as $product)
+                                @php $thumb = $product->getFirstMediaUrl('images'); @endphp
 
-                        {{-- Dark count block --}}
-                        <div class="bg-gray-900 flex flex-col items-center justify-center px-6 shrink-0 gap-0.5">
-                            <span class="text-3xl font-black text-white leading-none">{{ $category->activeProducts->count() }}</span>
-                            <span class="text-[9px] uppercase tracking-widest text-gray-300 font-bold">items</span>
-                        </div>
-                    </div>
+                                <div class="group bg-white rounded-2xl shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 overflow-hidden flex flex-col"
+                                     data-product-card
+                                     data-name="{{ $product->name }}">
 
-                    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
-                        @foreach ($category->activeProducts as $product)
-                            @php $thumb = $product->getFirstMediaUrl('images'); @endphp
+                                    {{-- Image area with name overlay --}}
+                                    <a href="{{ route('product.show', $product->slug) }}" class="relative block overflow-hidden">
 
-                            <div class="group bg-white rounded-2xl shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 overflow-hidden flex flex-col"
-                                 data-product-card
-                                 data-name="{{ $product->name }}">
+                                        <div class="absolute top-0 left-0 right-0 z-10 px-3 pt-3 pb-6 bg-gradient-to-b from-white/80 to-transparent">
+                                            <h3 class="font-bold text-gray-900 text-sm leading-snug line-clamp-2">{{ $product->name }}</h3>
+                                        </div>
 
-                                {{-- Image area with name overlay --}}
-                                <a href="{{ route('product.show', $product->slug) }}" class="relative block overflow-hidden">
+                                        <div class="aspect-square bg-gray-100 overflow-hidden">
+                                            @if ($thumb)
+                                                <img src="{{ $thumb }}" alt="{{ $product->name }}"
+                                                     class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                                                     loading="lazy"
+                                                     onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+                                                <div style="display:none" class="w-full h-full items-center justify-center bg-amber-50">
+                                                    <svg class="w-12 h-12 text-amber-200" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1"><path stroke-linecap="round" stroke-linejoin="round" d="M9.75 3.104v5.714a2.25 2.25 0 01-.659 1.591L5 14.5M9.75 3.104c-.251.023-.501.05-.75.082m.75-.082a24.301 24.301 0 014.5 0m0 0v5.714c0 .597.237 1.17.659 1.591L19.8 15.3M14.25 3.104c.251.023.501.05.75.082M19.8 15.3l-1.57.393A9.065 9.065 0 0112 15a9.065 9.065 0 00-6.23-.693L5 14.5m14.8.8l1.402 1.402c1 1 .316 2.702-1.067 2.702H4.865c-1.383 0-2.067-1.702-1.067-2.702L5 14.5"/></svg>
+                                                </div>
+                                            @else
+                                                <div class="w-full h-full flex items-center justify-center bg-gray-50">
+                                                    <svg class="w-12 h-12 text-gray-200" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1"><path stroke-linecap="round" stroke-linejoin="round" d="M9.75 3.104v5.714a2.25 2.25 0 01-.659 1.591L5 14.5M9.75 3.104c-.251.023-.501.05-.75.082m.75-.082a24.301 24.301 0 014.5 0m0 0v5.714c0 .597.237 1.17.659 1.591L19.8 15.3M14.25 3.104c.251.023.501.05.75.082M19.8 15.3l-1.57.393A9.065 9.065 0 0112 15a9.065 9.065 0 00-6.23-.693L5 14.5m14.8.8l1.402 1.402c1 1 .316 2.702-1.067 2.702H4.865c-1.383 0-2.067-1.702-1.067-2.702L5 14.5"/></svg>
+                                                </div>
+                                            @endif
+                                        </div>
+                                    </a>
 
-                                    {{-- Name badge — top-left overlay --}}
-                                    <div class="absolute top-0 left-0 right-0 z-10 px-3 pt-3 pb-6 bg-gradient-to-b from-white/80 to-transparent">
-                                        <h3 class="font-bold text-gray-900 text-sm leading-snug line-clamp-2">{{ $product->name }}</h3>
-                                    </div>
-
-                                    {{-- Product image --}}
-                                    <div class="aspect-square bg-gray-100 overflow-hidden">
-                                        @if ($thumb)
-                                            <img src="{{ $thumb }}" alt="{{ $product->name }}"
-                                                 class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                                                 loading="lazy"
-                                                 onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
-                                            <div style="display:none" class="w-full h-full items-center justify-center bg-amber-50">
-                                                <svg class="w-12 h-12 text-amber-200" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1"><path stroke-linecap="round" stroke-linejoin="round" d="M9.75 3.104v5.714a2.25 2.25 0 01-.659 1.591L5 14.5M9.75 3.104c-.251.023-.501.05-.75.082m.75-.082a24.301 24.301 0 014.5 0m0 0v5.714c0 .597.237 1.17.659 1.591L19.8 15.3M14.25 3.104c.251.023.501.05.75.082M19.8 15.3l-1.57.393A9.065 9.065 0 0112 15a9.065 9.065 0 00-6.23-.693L5 14.5m14.8.8l1.402 1.402c1 1 .316 2.702-1.067 2.702H4.865c-1.383 0-2.067-1.702-1.067-2.702L5 14.5"/></svg>
-                                            </div>
+                                    {{-- Bottom: price + CTA --}}
+                                    <div class="p-3 flex flex-col gap-2 mt-auto">
+                                        @if (($product->active_variants_count ?? 0) > 0)
+                                            <p class="text-[11px] text-gray-400 font-medium text-center">{{ $product->active_variants_count }} options available</p>
+                                            <a href="{{ route('product.show', $product->slug) }}"
+                                               class="w-full bg-brand-gradient bg-brand-gradient-hover text-white text-xs font-bold py-2.5 rounded-xl flex items-center justify-center gap-1.5 shadow-sm active:scale-95 transition-all duration-200">
+                                                <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"/></svg>
+                                                Select Option
+                                            </a>
                                         @else
-                                            <div class="w-full h-full flex items-center justify-center bg-gray-50">
-                                                <svg class="w-12 h-12 text-gray-200" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1"><path stroke-linecap="round" stroke-linejoin="round" d="M9.75 3.104v5.714a2.25 2.25 0 01-.659 1.591L5 14.5M9.75 3.104c-.251.023-.501.05-.75.082m.75-.082a24.301 24.301 0 014.5 0m0 0v5.714c0 .597.237 1.17.659 1.591L19.8 15.3M14.25 3.104c.251.023.501.05.75.082M19.8 15.3l-1.57.393A9.065 9.065 0 0112 15a9.065 9.065 0 00-6.23-.693L5 14.5m14.8.8l1.402 1.402c1 1 .316 2.702-1.067 2.702H4.865c-1.383 0-2.067-1.702-1.067-2.702L5 14.5"/></svg>
-                                            </div>
+                                            <p class="text-sm font-extrabold text-gray-800 text-center">PKR {{ number_format($product->price) }}</p>
+                                            <button
+                                                x-data
+                                                @click.prevent.stop="Livewire.dispatch('add-to-cart', { id: {{ $product->id }}, qty: 1, variantId: 0 }); $el.classList.add('scale-95'); setTimeout(() => $el.classList.remove('scale-95'), 150)"
+                                                class="w-full bg-brand-gradient bg-brand-gradient-hover active:scale-95 text-white text-xs font-bold py-2.5 rounded-xl flex items-center justify-center gap-1.5 shadow-sm hover:shadow-md transition-all duration-200"
+                                            >
+                                                <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 00-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 00-16.536-1.84M7.5 14.25L5.106 5.272M6 20.25a.75.75 0 11-1.5 0 .75.75 0 011.5 0zm12.75 0a.75.75 0 11-1.5 0 .75.75 0 011.5 0z"/></svg>
+                                                Add to Cart
+                                            </button>
                                         @endif
                                     </div>
-                                </a>
-
-                                {{-- Bottom: price + CTA --}}
-                                <div class="p-3 flex flex-col gap-2 mt-auto">
-                                    @if (($product->active_variants_count ?? 0) > 0)
-                                        <p class="text-[11px] text-gray-400 font-medium text-center">{{ $product->active_variants_count }} options available</p>
-                                        <a href="{{ route('product.show', $product->slug) }}"
-                                           class="w-full bg-brand-gradient bg-brand-gradient-hover text-white text-xs font-bold py-2.5 rounded-xl flex items-center justify-center gap-1.5 shadow-sm active:scale-95 transition-all duration-200">
-                                            <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"/></svg>
-                                            Select Option
-                                        </a>
-                                    @else
-                                        <p class="text-sm font-extrabold text-gray-800 text-center">PKR {{ number_format($product->price) }}</p>
-                                        <button
-                                            x-data
-                                            @click.prevent.stop="Livewire.dispatch('add-to-cart', { id: {{ $product->id }}, qty: 1, variantId: 0 }); $el.classList.add('scale-95'); setTimeout(() => $el.classList.remove('scale-95'), 150)"
-                                            class="w-full bg-brand-gradient bg-brand-gradient-hover active:scale-95 text-white text-xs font-bold py-2.5 rounded-xl flex items-center justify-center gap-1.5 shadow-sm hover:shadow-md transition-all duration-200"
-                                        >
-                                            <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 00-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 00-16.536-1.84M7.5 14.25L5.106 5.272M6 20.25a.75.75 0 11-1.5 0 .75.75 0 011.5 0zm12.75 0a.75.75 0 11-1.5 0 .75.75 0 011.5 0z"/></svg>
-                                            Add to Cart
-                                        </button>
-                                    @endif
                                 </div>
-                            </div>
-                        @endforeach
+                            @endforeach
+                        </div>
+                    </section>
+                </div>
+
+                {{-- ── Full-width looping video break after the 3rd visible category ── --}}
+                @if ($renderedCatCount === 3)
+                    <div class="mt-14 overflow-hidden" style="max-height: 520px;">
+                        <video
+                            autoplay
+                            loop
+                            muted
+                            playsinline
+                            class="w-full object-cover"
+                            style="height: 56vw; max-height: 520px; min-height: 260px; display: block;"
+                        >
+                            <source src="/videos/b_final_videomp_.mp4" type="video/mp4">
+                        </video>
                     </div>
-                </section>
+                @endif
+
             @endif
         @empty
-            <div class="text-center py-20">
+            <div class="max-w-6xl mx-auto px-4 py-20 text-center">
                 <svg class="w-16 h-16 text-gray-300 mx-auto mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M9.75 3.104v5.714a2.25 2.25 0 01-.659 1.591L5 14.5M9.75 3.104c-.251.023-.501.05-.75.082m.75-.082a24.301 24.301 0 014.5 0m0 0v5.714c0 .597.237 1.17.659 1.591L19.8 15.3M14.25 3.104c.251.023.501.05.75.082M19.8 15.3l-1.57.393A9.065 9.065 0 0112 15a9.065 9.065 0 00-6.23-.693L5 14.5m14.8.8l1.402 1.402c1 1 .316 2.702-1.067 2.702H4.865c-1.383 0-2.067-1.702-1.067-2.702L5 14.5"/>
                 </svg>
@@ -306,7 +317,7 @@
             </div>
         @endforelse
 
-        </div>{{-- end inner max-w-6xl --}}
+        <div class="pb-14"></div>
 
     </div>{{-- end #products-scroll-section --}}
 
@@ -365,48 +376,4 @@
         </div>
     </section>
 
-@push('scripts')
-<script>
-(function () {
-    const video   = document.getElementById('scroll-bg-video');
-    const section = document.getElementById('products-scroll-section');
-    if (!video || !section) return;
-
-    let last = -1;
-
-    function update() {
-        const d = video.duration;
-        if (!d || !isFinite(d) || d <= 0) return;
-
-        const rect       = section.getBoundingClientRect();
-        const scrollable = section.offsetHeight - window.innerHeight;
-        if (scrollable <= 0) return;
-
-        const progress = Math.min(Math.max(-rect.top, 0) / scrollable, 1);
-        if (Math.abs(progress - last) < 0.0005) return;
-        last = progress;
-        video.currentTime = progress * d;
-    }
-
-    function loop() {
-        update();
-        requestAnimationFrame(loop);
-    }
-
-    function start() {
-        video.pause();
-        requestAnimationFrame(loop);
-    }
-
-    if (video.readyState >= 1) {
-        start();
-    } else {
-        video.addEventListener('loadedmetadata', start, { once: true });
-        video.load();
-    }
-})();
-</script>
-@endpush
-
 </x-storefront>
-

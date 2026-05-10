@@ -2,6 +2,7 @@
 
 namespace App\Livewire;
 
+use App\Models\Branch;
 use App\Models\DeliveryZone;
 use Illuminate\Support\Collection;
 use Livewire\Component;
@@ -16,10 +17,13 @@ class LocationModal extends Component
 
     public Collection $zones;
 
+    public Collection $branches;
+
     public function mount(): void
     {
         $this->visible = ! session()->has('order_type');
         $this->zones = DeliveryZone::activeOrdered()->get();
+        $this->branches = Branch::activeOrdered()->get();
     }
 
     #[\Livewire\Attributes\On('location-modal:show')]
