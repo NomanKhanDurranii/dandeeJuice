@@ -293,17 +293,27 @@
 
                 {{-- ── Full-width looping video break after the 3rd visible category ── --}}
                 @if ($renderedCatCount === 3)
-                    <div class="mt-14 overflow-hidden" style="max-height: 340px;">
-                        <video
-                            autoplay
-                            loop
-                            muted
-                            playsinline
-                            class="w-full object-cover"
-                            style="height: 34vw; max-height: 340px; min-height: 200px; display: block;"
-                        >
-                            <source src="/videos/b_final_videomp_.mp4" type="video/mp4">
-                        </video>
+                    <div class="mt-14">
+                        {{-- Top border: dual green gradient lines with a dark gap --}}
+                        <div class="h-1 bg-brand-gradient"></div>
+                        <div class="h-px bg-gray-900"></div>
+
+                        <div class="overflow-hidden" style="max-height: 520px;">
+                            <video
+                                autoplay
+                                loop
+                                muted
+                                playsinline
+                                class="w-full object-cover"
+                                style="height: 56vw; max-height: 520px; min-height: 260px; display: block;"
+                            >
+                                <source src="/videos/b_final_videomp_.mp4" type="video/mp4">
+                            </video>
+                        </div>
+
+                        {{-- Bottom border: mirror of top --}}
+                        <div class="h-px bg-gray-900"></div>
+                        <div class="h-1 bg-brand-gradient"></div>
                     </div>
                 @endif
 
