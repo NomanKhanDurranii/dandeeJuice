@@ -26,7 +26,7 @@
 
     {{-- =========== MARQUEE STRIP =========== --}}
     <div class="sticky top-0 z-30">
-    <div class="bg-red-600 overflow-hidden py-1.5">
+    <div class="bg-brand-gradient overflow-hidden py-1.5">
         <style>
             @keyframes marquee-scroll {
                 from { transform: translateX(0); }

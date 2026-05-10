@@ -11,15 +11,24 @@
     --color-brand-dark: #1e40af;
     --color-brand-light: #dbeafe;
 
-    /* Override red → #22f24f (brand green) across the entire app */
+    /* Brand green scale: #22f24f (light) → #064a01 (dark) */
     --color-red-50:  #edfdf3;
     --color-red-100: #ccfadc;
     --color-red-200: #9af5be;
     --color-red-300: #5eefa0;
     --color-red-400: #30e87c;
     --color-red-500: #22f24f;
-    --color-red-600: #22f24f;
-    --color-red-700: #16c03e;
-    --color-red-800: #0e8f2d;
-    --color-red-900: #085f1d;
+    --color-red-600: #18c03d;
+    --color-red-700: #0e8f2c;
+    --color-red-800: #07601d;
+    --color-red-900: #064a01;
+}
+
+@layer utilities {
+    .bg-brand-gradient {
+        background: linear-gradient(135deg, #22f24f 0%, #064a01 100%);
+    }
+    .bg-brand-gradient-hover:hover {
+        background: linear-gradient(135deg, #1bd944 0%, #053d01 100%);
+    }
 }
