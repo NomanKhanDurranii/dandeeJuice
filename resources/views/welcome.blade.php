@@ -106,9 +106,9 @@
                         data-pill-id="{{ $cat->id }}"
                         @click="goTo({{ $cat->id }})"
                         :class="activeId === {{ $cat->id }}
-                            ? 'bg-brand-gradient text-gray-900 border-transparent'
+                            ? 'bg-brand-gradient text-white border-transparent'
                             : 'bg-white text-gray-700 border-gray-200'"
-                        class="inline-flex items-center px-4 py-1.5 rounded-full text-xs font-bold whitespace-nowrap uppercase tracking-wider border shadow-sm transition-all duration-150 hover:bg-brand-gradient hover:text-gray-900 hover:border-transparent cursor-pointer"
+                        class="inline-flex items-center px-4 py-1.5 rounded-full text-xs font-bold whitespace-nowrap uppercase tracking-wider border shadow-sm transition-all duration-150 hover:bg-brand-gradient hover:text-white hover:border-transparent cursor-pointer"
                     >
                         {{ $cat->name }}
                     </button>
@@ -276,7 +276,7 @@
                                     @if (($product->active_variants_count ?? 0) > 0)
                                         <p class="text-[11px] text-gray-400 font-medium text-center">{{ $product->active_variants_count }} options available</p>
                                         <a href="{{ route('product.show', $product->slug) }}"
-                                           class="w-full bg-brand-gradient bg-brand-gradient-hover text-gray-900 text-xs font-bold py-2.5 rounded-xl flex items-center justify-center gap-1.5 shadow-sm active:scale-95 transition-all duration-200">
+                                           class="w-full bg-brand-gradient bg-brand-gradient-hover text-white text-xs font-bold py-2.5 rounded-xl flex items-center justify-center gap-1.5 shadow-sm active:scale-95 transition-all duration-200">
                                             <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"/></svg>
                                             Select Option
                                         </a>

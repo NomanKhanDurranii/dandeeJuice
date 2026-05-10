@@ -146,7 +146,7 @@
         </div>
 
         {{-- Bottom accent line --}}
-        <div class="h-px bg-gradient-to-r from-transparent via-[#F07800] to-transparent"></div>
+        <div class="h-px bg-gradient-to-r from-transparent via-red-400 to-transparent"></div>
 
         {{-- Mobile dropdown --}}
         <div x-show="menuOpen" x-cloak

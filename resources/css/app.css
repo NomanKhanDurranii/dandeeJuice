@@ -11,28 +11,28 @@
     --color-brand-dark: #1e40af;
     --color-brand-light: #dbeafe;
 
-    /* Brand scale: #FFD100 (golden yellow) → #F07800 (warm orange) */
-    --color-red-50:  #fff9e6;
-    --color-red-100: #fff0b3;
-    --color-red-200: #ffe066;
-    --color-red-300: #ffd100;
-    --color-red-400: #f5c000;
-    --color-red-500: #f0a800;
-    --color-red-600: #f07800;
-    --color-red-700: #d45a00;
-    --color-red-800: #a83d00;
-    --color-red-900: #7a2800;
+    /* Brand green scale: #22f24f (light) → #064a01 (dark) */
+    --color-red-50:  #edfdf3;
+    --color-red-100: #ccfadc;
+    --color-red-200: #9af5be;
+    --color-red-300: #5eefa0;
+    --color-red-400: #30e87c;
+    --color-red-500: #22f24f;
+    --color-red-600: #18c03d;
+    --color-red-700: #0e8f2c;
+    --color-red-800: #07601d;
+    --color-red-900: #064a01;
 }
 
 @layer utilities {
     .bg-brand-gradient {
-        background: linear-gradient(135deg, #FFD100 0%, #F07800 100%);
+        background: linear-gradient(135deg, #22f24f 0%, #064a01 100%);
     }
     .bg-brand-gradient-hover:hover {
-        background: linear-gradient(135deg, #F5C800 0%, #D46500 100%);
+        background: linear-gradient(135deg, #1bd944 0%, #053d01 100%);
     }
     .text-brand-gradient {
-        background: linear-gradient(135deg, #FFD100 0%, #F07800 100%);
+        background: linear-gradient(135deg, #22f24f 0%, #064a01 100%);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
         background-clip: text;
