@@ -237,72 +237,62 @@
                         </div>
                     </div>
 
-                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
                         @foreach ($category->activeProducts as $product)
                             @php $thumb = $product->getFirstMediaUrl('images'); @endphp
-                            <a
-                                href="{{ route('product.show', $product->slug) }}"
-                                class="group bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-xl hover:-translate-y-1 hover:border-red-100 transition-all duration-300 flex overflow-hidden"
-                                data-product-card
-                                data-name="{{ $product->name }}"
-                            >
-                                {{-- Left: text + price/action --}}
-                                <div class="flex-1 min-w-0 p-4 flex flex-col justify-between overflow-hidden min-h-[170px]">
-                                    <div class="min-w-0">
-                                        <h3 class="font-bold text-gray-900 text-sm leading-snug line-clamp-2 group-hover:text-red-700 transition-colors duration-200">{{ $product->name }}</h3>
-                                        @if ($product->description)
-                                            <p class="text-gray-400 text-xs mt-0.5 leading-relaxed">{{ \Illuminate\Support\Str::limit(strip_tags($product->description), 60) }}</p>
-                                        @endif
+
+                            <div class="group bg-white rounded-2xl shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 overflow-hidden flex flex-col"
+                                 data-product-card
+                                 data-name="{{ $product->name }}">
+
+                                {{-- Image area with name overlay --}}
+                                <a href="{{ route('product.show', $product->slug) }}" class="relative block overflow-hidden">
+
+                                    {{-- Name badge — top-left overlay --}}
+                                    <div class="absolute top-0 left-0 right-0 z-10 px-3 pt-3 pb-6 bg-gradient-to-b from-black/55 to-transparent">
+                                        <h3 class="font-bold text-white text-sm leading-snug line-clamp-2 drop-shadow">{{ $product->name }}</h3>
                                     </div>
 
-                                    {{-- Price + action row --}}
-                                    <div class="flex items-center gap-2 pt-1.5 border-t border-gray-50">
-                                        @if (($product->active_variants_count ?? 0) > 0)
-                                            <span class="inline-flex items-center gap-1 text-[10px] font-bold text-red-600 bg-red-50 border border-red-100 px-2 py-0.5 rounded-full shrink-0">
-                                                {{ $product->active_variants_count }} options
-                                            </span>
-                                            <div class="ml-auto bg-brand-gradient bg-brand-gradient-hover text-gray-900 text-[10px] font-bold px-2.5 h-6 rounded-md flex items-center gap-1 shadow-sm transition-all duration-200 shrink-0">
-                                                Select
-                                                <svg class="w-2.5 h-2.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"/></svg>
+                                    {{-- Product image --}}
+                                    <div class="aspect-square bg-gray-100 overflow-hidden">
+                                        @if ($thumb)
+                                            <img src="{{ $thumb }}" alt="{{ $product->name }}"
+                                                 class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                                                 loading="lazy"
+                                                 onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+                                            <div style="display:none" class="w-full h-full items-center justify-center bg-amber-50">
+                                                <svg class="w-12 h-12 text-amber-200" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1"><path stroke-linecap="round" stroke-linejoin="round" d="M9.75 3.104v5.714a2.25 2.25 0 01-.659 1.591L5 14.5M9.75 3.104c-.251.023-.501.05-.75.082m.75-.082a24.301 24.301 0 014.5 0m0 0v5.714c0 .597.237 1.17.659 1.591L19.8 15.3M14.25 3.104c.251.023.501.05.75.082M19.8 15.3l-1.57.393A9.065 9.065 0 0112 15a9.065 9.065 0 00-6.23-.693L5 14.5m14.8.8l1.402 1.402c1 1 .316 2.702-1.067 2.702H4.865c-1.383 0-2.067-1.702-1.067-2.702L5 14.5"/></svg>
                                             </div>
                                         @else
-                                            <span class="font-extrabold text-red-600 text-sm leading-none shrink-0">PKR {{ number_format($product->price) }}</span>
-                                            <button
-                                                x-data
-                                                @click.prevent.stop="Livewire.dispatch('add-to-cart', { id: {{ $product->id }}, qty: 1, variantId: 0 }); $el.classList.add('scale-95'); setTimeout(() => $el.classList.remove('scale-95'), 150)"
-                                                class="ml-auto bg-brand-gradient bg-brand-gradient-hover active:scale-95 text-gray-900 text-[10px] font-bold px-2.5 h-6 rounded-md flex items-center gap-1 shadow-sm hover:shadow-md transition-all duration-200 shrink-0"
-                                            >
-                                                <svg class="w-2.5 h-2.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 00-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 00-16.536-1.84M7.5 14.25L5.106 5.272M6 20.25a.75.75 0 11-1.5 0 .75.75 0 011.5 0zm12.75 0a.75.75 0 11-1.5 0 .75.75 0 011.5 0z"/></svg>
-                                                Add to Cart
-                                            </button>
+                                            <div class="w-full h-full flex items-center justify-center bg-gray-50">
+                                                <svg class="w-12 h-12 text-gray-200" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1"><path stroke-linecap="round" stroke-linejoin="round" d="M9.75 3.104v5.714a2.25 2.25 0 01-.659 1.591L5 14.5M9.75 3.104c-.251.023-.501.05-.75.082m.75-.082a24.301 24.301 0 014.5 0m0 0v5.714c0 .597.237 1.17.659 1.591L19.8 15.3M14.25 3.104c.251.023.501.05.75.082M19.8 15.3l-1.57.393A9.065 9.065 0 0112 15a9.065 9.065 0 00-6.23-.693L5 14.5m14.8.8l1.402 1.402c1 1 .316 2.702-1.067 2.702H4.865c-1.383 0-2.067-1.702-1.067-2.702L5 14.5"/></svg>
+                                            </div>
                                         @endif
                                     </div>
-                                </div>
+                                </a>
 
-                                {{-- Right: aspect-square locks height = width = 112px regardless of image natural size --}}
-                                <div class="w-[170px] shrink-0 aspect-square bg-gray-100 relative overflow-hidden">
-                                    @if ($thumb)
-                                        <img
-                                            src="{{ $thumb }}"
-                                            alt="{{ $product->name }}"
-                                            class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                                            loading="lazy"
-                                            onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
-                                        {{-- Shown only when image URL fails (e.g. broken symlink) --}}
-                                        <div style="display:none" class="absolute inset-0 items-center justify-center bg-red-50">
-                                            <svg class="w-9 h-9 text-red-200" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1">
-                                                <path stroke-linecap="round" stroke-linejoin="round" d="M9.75 3.104v5.714a2.25 2.25 0 01-.659 1.591L5 14.5M9.75 3.104c-.251.023-.501.05-.75.082m.75-.082a24.301 24.301 0 014.5 0m0 0v5.714c0 .597.237 1.17.659 1.591L19.8 15.3M14.25 3.104c.251.023.501.05.75.082M19.8 15.3l-1.57.393A9.065 9.065 0 0112 15a9.065 9.065 0 00-6.23-.693L5 14.5m14.8.8l1.402 1.402c1 1 .316 2.702-1.067 2.702H4.865c-1.383 0-2.067-1.702-1.067-2.702L5 14.5"/>
-                                            </svg>
-                                        </div>
+                                {{-- Bottom: price + CTA --}}
+                                <div class="p-3 flex flex-col gap-2 mt-auto">
+                                    @if (($product->active_variants_count ?? 0) > 0)
+                                        <p class="text-[11px] text-gray-400 font-medium text-center">{{ $product->active_variants_count }} options available</p>
+                                        <a href="{{ route('product.show', $product->slug) }}"
+                                           class="w-full bg-brand-gradient bg-brand-gradient-hover text-gray-900 text-xs font-bold py-2.5 rounded-xl flex items-center justify-center gap-1.5 shadow-sm active:scale-95 transition-all duration-200">
+                                            <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"/></svg>
+                                            Select Option
+                                        </a>
                                     @else
-                                        <div class="w-full h-full flex items-center justify-center bg-gray-50">
-                                            <svg class="w-9 h-9 text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1">
-                                                <path stroke-linecap="round" stroke-linejoin="round" d="M9.75 3.104v5.714a2.25 2.25 0 01-.659 1.591L5 14.5M9.75 3.104c-.251.023-.501.05-.75.082m.75-.082a24.301 24.301 0 014.5 0m0 0v5.714c0 .597.237 1.17.659 1.591L19.8 15.3M14.25 3.104c.251.023.501.05.75.082M19.8 15.3l-1.57.393A9.065 9.065 0 0112 15a9.065 9.065 0 00-6.23-.693L5 14.5m14.8.8l1.402 1.402c1 1 .316 2.702-1.067 2.702H4.865c-1.383 0-2.067-1.702-1.067-2.702L5 14.5"/>
-                                            </svg>
-                                        </div>
+                                        <p class="text-sm font-extrabold text-gray-800 text-center">PKR {{ number_format($product->price) }}</p>
+                                        <button
+                                            x-data
+                                            @click.prevent.stop="Livewire.dispatch('add-to-cart', { id: {{ $product->id }}, qty: 1, variantId: 0 }); $el.classList.add('scale-95'); setTimeout(() => $el.classList.remove('scale-95'), 150)"
+                                            class="w-full bg-brand-gradient bg-brand-gradient-hover active:scale-95 text-gray-900 text-xs font-bold py-2.5 rounded-xl flex items-center justify-center gap-1.5 shadow-sm hover:shadow-md transition-all duration-200"
+                                        >
+                                            <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 00-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 00-16.536-1.84M7.5 14.25L5.106 5.272M6 20.25a.75.75 0 11-1.5 0 .75.75 0 011.5 0zm12.75 0a.75.75 0 11-1.5 0 .75.75 0 011.5 0z"/></svg>
+                                            Add to Cart
+                                        </button>
                                     @endif
                                 </div>
-                            </a>
+                            </div>
                         @endforeach
                     </div>
                 </section>
