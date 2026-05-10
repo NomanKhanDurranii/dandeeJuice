@@ -197,7 +197,7 @@
     {{-- Static background image; each category gets its own max-w container so the
          mid-section video can bleed full-width naturally between them. --}}
     <div id="products-scroll-section"
-         style="background-image: url('/images/background.png'); background-size: cover; background-position: center;">
+         style="background-image: url('/images/background.png'); background-size: cover; background-position: center; background-attachment: fixed;">
 
         @php $renderedCatCount = 0; @endphp
 
@@ -293,14 +293,14 @@
 
                 {{-- ── Full-width looping video break after the 3rd visible category ── --}}
                 @if ($renderedCatCount === 3)
-                    <div class="mt-14 overflow-hidden" style="max-height: 520px;">
+                    <div class="mt-14 overflow-hidden" style="max-height: 340px;">
                         <video
                             autoplay
                             loop
                             muted
                             playsinline
                             class="w-full object-cover"
-                            style="height: 56vw; max-height: 520px; min-height: 260px; display: block;"
+                            style="height: 34vw; max-height: 340px; min-height: 200px; display: block;"
                         >
                             <source src="/videos/b_final_videomp_.mp4" type="video/mp4">
                         </video>
