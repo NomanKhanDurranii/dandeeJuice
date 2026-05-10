@@ -203,9 +203,9 @@
                 class="absolute inset-0 w-full h-full object-cover"
                 muted playsinline preload="auto"
             >
-                <source src="/videos/videomp_scrub.mp4" type="video/mp4">
+                <source src="/videos/b_final_scrub.mp4" type="video/mp4">
             </video>
-            <div class="absolute inset-0 bg-black/40"></div>
+            <div class="absolute inset-0 bg-black/10"></div>
         </div>
 
         {{-- margin-top:-100vh pulls products up to overlap the sticky video --}}
@@ -249,8 +249,8 @@
                                 <a href="{{ route('product.show', $product->slug) }}" class="relative block overflow-hidden">
 
                                     {{-- Name badge — top-left overlay --}}
-                                    <div class="absolute top-0 left-0 right-0 z-10 px-3 pt-3 pb-6 bg-gradient-to-b from-black/55 to-transparent">
-                                        <h3 class="font-bold text-white text-sm leading-snug line-clamp-2 drop-shadow">{{ $product->name }}</h3>
+                                    <div class="absolute top-0 left-0 right-0 z-10 px-3 pt-3 pb-6 bg-gradient-to-b from-white/80 to-transparent">
+                                        <h3 class="font-bold text-gray-900 text-sm leading-snug line-clamp-2">{{ $product->name }}</h3>
                                     </div>
 
                                     {{-- Product image --}}

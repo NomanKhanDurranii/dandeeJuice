@@ -24,7 +24,7 @@
                 <div class="flex bg-gray-100 rounded-full p-1 gap-1">
                     <button
                         @click="tab = 'delivery'"
-                        :class="tab === 'delivery' ? 'bg-blue-900 text-white shadow' : 'text-gray-500 hover:text-gray-700'"
+                        :class="tab === 'delivery' ? 'bg-brand-gradient text-white shadow' : 'text-gray-500 hover:text-gray-700'"
                         class="flex-1 flex items-center justify-center gap-1.5 py-2.5 rounded-full text-sm font-bold tracking-wide transition-all"
                     >
                         <svg class="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -34,7 +34,7 @@
                     </button>
                     <button
                         @click="tab = 'pickup'"
-                        :class="tab === 'pickup' ? 'bg-blue-900 text-white shadow' : 'text-gray-500 hover:text-gray-700'"
+                        :class="tab === 'pickup' ? 'bg-brand-gradient text-white shadow' : 'text-gray-500 hover:text-gray-700'"
                         class="flex-1 flex items-center justify-center gap-1.5 py-2.5 rounded-full text-sm font-bold tracking-wide transition-all"
                     >
                         <svg class="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -75,7 +75,7 @@
                         <div class="relative">
                             <select
                                 wire:model.live="selectedZoneId"
-                                class="w-full appearance-none border border-gray-300 rounded-xl px-4 py-3 pr-10 text-sm text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent bg-white cursor-pointer transition"
+                                class="w-full appearance-none border border-gray-300 rounded-xl px-4 py-3 pr-10 text-sm text-gray-800 focus:outline-none focus:ring-2 focus:ring-red-400 focus:border-transparent bg-white cursor-pointer transition"
                             >
                                 <option value="">— Choose your area —</option>
                                 @foreach ($zones as $zone)
@@ -96,8 +96,8 @@
                         @if ($selectedZoneId)
                             @php $selectedZone = $zones->firstWhere('id', $selectedZoneId); @endphp
                             @if ($selectedZone)
-                                <div class="mt-3 bg-blue-50 border border-blue-100 rounded-xl px-4 py-3 flex items-center gap-3">
-                                    <div class="w-8 h-8 rounded-full bg-blue-900 flex items-center justify-center shrink-0">
+                                <div class="mt-3 bg-red-50 border border-red-100 rounded-xl px-4 py-3 flex items-center gap-3">
+                                    <div class="w-8 h-8 rounded-full bg-brand-gradient flex items-center justify-center shrink-0">
                                         <svg class="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                             <path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z"/>
                                             <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z"/>
@@ -105,13 +105,13 @@
                                     </div>
                                     <div class="flex-1 min-w-0">
                                         <p class="font-semibold text-gray-800 text-sm truncate">{{ $selectedZone->name }}</p>
-                                        <p class="text-xs text-blue-700 font-medium mt-0.5">
+                                        <p class="text-xs text-red-600 font-medium mt-0.5">
                                             {{ $selectedZone->delivery_fee > 0
                                                 ? 'Delivery fee: PKR '.number_format($selectedZone->delivery_fee)
                                                 : 'Free delivery' }}
                                         </p>
                                     </div>
-                                    <svg class="w-5 h-5 text-blue-900 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                                    <svg class="w-5 h-5 text-red-700 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
                                         <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
                                     </svg>
                                 </div>
@@ -124,8 +124,8 @@
                 <div x-show="tab === 'pickup'" x-cloak class="pb-4">
                     <p class="text-sm font-medium text-gray-700 mb-3">Our store location</p>
 
-                    <div class="border-2 border-blue-900 bg-blue-50 rounded-xl p-4 flex items-start gap-3">
-                        <div class="w-10 h-10 rounded-full bg-blue-900 flex items-center justify-center shrink-0 mt-0.5">
+                    <div class="border-2 border-red-600 bg-red-50 rounded-xl p-4 flex items-start gap-3">
+                        <div class="w-10 h-10 rounded-full bg-brand-gradient flex items-center justify-center shrink-0 mt-0.5">
                             <svg class="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 21v-7.5a.75.75 0 01.75-.75h3a.75.75 0 01.75.75V21m-4.5 0H2.36m11.14 0H18m0 0h3.64m-1.39 0V9.349m-16.5 11.65V9.35m0 0a3.001 3.001 0 003.75-.615A2.993 2.993 0 009.75 9.75c.896 0 1.7-.393 2.25-1.016a2.993 2.993 0 002.25 1.016c.896 0 1.7-.393 2.25-1.016a3.001 3.001 0 003.75.614m-16.5 0a3.004 3.004 0 01-.621-4.72L4.318 3.44A1.5 1.5 0 015.378 3h13.243a1.5 1.5 0 011.06.44l1.19 1.189a3 3 0 01-.621 4.72m-13.5 8.65h3.75a.75.75 0 00.75-.75V13.5a.75.75 0 00-.75-.75H6.75a.75.75 0 00-.75.75v3.75c0 .415.336.75.75.75z"/>
                             </svg>
@@ -138,7 +138,7 @@
                             <a
                                 href="https://maps.google.com/?q={{ urlencode(\App\Models\Setting::get('store_address', 'Gulberg Lahore')) }}"
                                 target="_blank"
-                                class="inline-flex items-center gap-1 mt-2 text-xs font-semibold text-blue-700 hover:text-blue-900 transition"
+                                class="inline-flex items-center gap-1 mt-2 text-xs font-semibold text-red-600 hover:text-red-700 transition"
                             >
                                 <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M9 6.75V15m6-6v8.25m.503 3.498l4.875-2.437c.381-.19.622-.58.622-1.006V4.82c0-.836-.88-1.38-1.628-1.006l-3.869 1.934c-.317.159-.69.159-1.006 0L9.503 3.252a1.125 1.125 0 00-1.006 0L3.622 5.689C3.24 5.88 3 6.27 3 6.695V19.18c0 .836.88 1.38 1.628 1.006l3.869-1.934c-.317-.159.69-.159 1.006 0l4.994 2.497c.317.158.69.158 1.006 0z"/>
@@ -159,7 +159,7 @@
                             wire:click="chooseDelivery"
                             wire:loading.attr="disabled"
                             wire:target="chooseDelivery"
-                            class="w-full bg-red-600 hover:bg-red-700 disabled:opacity-60 text-white font-bold py-3.5 rounded-xl text-sm transition active:scale-95"
+                            class="w-full bg-brand-gradient disabled:opacity-60 text-white font-bold py-3.5 rounded-xl text-sm transition active:scale-95"
                         >
                             <span wire:loading.remove wire:target="chooseDelivery">Confirm Delivery Area</span>
                             <span wire:loading wire:target="chooseDelivery">Saving…</span>
@@ -170,7 +170,7 @@
                     <button
                         wire:click="choosePickup"
                         wire:loading.attr="disabled"
-                        class="w-full bg-red-600 hover:bg-red-700 disabled:opacity-60 text-white font-bold py-3.5 rounded-xl text-sm transition active:scale-95"
+                        class="w-full bg-brand-gradient disabled:opacity-60 text-white font-bold py-3.5 rounded-xl text-sm transition active:scale-95"
                     >
                         <span wire:loading.remove wire:target="choosePickup">Confirm Pick-up</span>
                         <span wire:loading wire:target="choosePickup">Saving…</span>
