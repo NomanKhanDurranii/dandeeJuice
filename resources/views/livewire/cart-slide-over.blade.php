@@ -133,7 +133,7 @@
 
             <button
                 wire:click="checkout"
-                class="w-full bg-brand-gradient bg-brand-gradient-hover text-white font-bold py-3 rounded-xl transition"
+                class="w-full bg-brand-gradient bg-brand-gradient-hover text-gray-900 font-bold py-3 rounded-xl transition"
             >
                 Proceed to Checkout
             </button>

@@ -106,9 +106,9 @@
                         data-pill-id="{{ $cat->id }}"
                         @click="goTo({{ $cat->id }})"
                         :class="activeId === {{ $cat->id }}
-                            ? 'bg-blue-900 text-white border-blue-900'
-                            : 'bg-white text-blue-900 border-blue-200'"
-                        class="inline-flex items-center px-4 py-1.5 rounded-full text-xs font-bold whitespace-nowrap uppercase tracking-wider border shadow-sm transition-all duration-150 hover:bg-blue-900 hover:text-white hover:border-blue-900 cursor-pointer"
+                            ? 'bg-brand-gradient text-gray-900 border-transparent'
+                            : 'bg-white text-gray-700 border-gray-200'"
+                        class="inline-flex items-center px-4 py-1.5 rounded-full text-xs font-bold whitespace-nowrap uppercase tracking-wider border shadow-sm transition-all duration-150 hover:bg-brand-gradient hover:text-gray-900 hover:border-transparent cursor-pointer"
                     >
                         {{ $cat->name }}
                     </button>
@@ -261,7 +261,7 @@
                                             <span class="inline-flex items-center gap-1 text-[10px] font-bold text-red-600 bg-red-50 border border-red-100 px-2 py-0.5 rounded-full shrink-0">
                                                 {{ $product->active_variants_count }} options
                                             </span>
-                                            <div class="ml-auto bg-brand-gradient bg-brand-gradient-hover text-white text-[10px] font-bold px-2.5 h-6 rounded-md flex items-center gap-1 shadow-sm transition-all duration-200 shrink-0">
+                                            <div class="ml-auto bg-brand-gradient bg-brand-gradient-hover text-gray-900 text-[10px] font-bold px-2.5 h-6 rounded-md flex items-center gap-1 shadow-sm transition-all duration-200 shrink-0">
                                                 Select
                                                 <svg class="w-2.5 h-2.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"/></svg>
                                             </div>
@@ -270,7 +270,7 @@
                                             <button
                                                 x-data
                                                 @click.prevent.stop="Livewire.dispatch('add-to-cart', { id: {{ $product->id }}, qty: 1, variantId: 0 }); $el.classList.add('scale-95'); setTimeout(() => $el.classList.remove('scale-95'), 150)"
-                                                class="ml-auto bg-brand-gradient bg-brand-gradient-hover active:scale-95 text-white text-[10px] font-bold px-2.5 h-6 rounded-md flex items-center gap-1 shadow-sm hover:shadow-md transition-all duration-200 shrink-0"
+                                                class="ml-auto bg-brand-gradient bg-brand-gradient-hover active:scale-95 text-gray-900 text-[10px] font-bold px-2.5 h-6 rounded-md flex items-center gap-1 shadow-sm hover:shadow-md transition-all duration-200 shrink-0"
                                             >
                                                 <svg class="w-2.5 h-2.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 00-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 00-16.536-1.84M7.5 14.25L5.106 5.272M6 20.25a.75.75 0 11-1.5 0 .75.75 0 011.5 0zm12.75 0a.75.75 0 11-1.5 0 .75.75 0 011.5 0z"/></svg>
                                                 Add to Cart
