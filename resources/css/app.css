@@ -10,4 +10,16 @@
     --color-brand: #1e3a8a;
     --color-brand-dark: #1e40af;
     --color-brand-light: #dbeafe;
+
+    /* Override red → #22f24f (brand green) across the entire app */
+    --color-red-50:  #edfdf3;
+    --color-red-100: #ccfadc;
+    --color-red-200: #9af5be;
+    --color-red-300: #5eefa0;
+    --color-red-400: #30e87c;
+    --color-red-500: #22f24f;
+    --color-red-600: #22f24f;
+    --color-red-700: #16c03e;
+    --color-red-800: #0e8f2d;
+    --color-red-900: #085f1d;
 }
