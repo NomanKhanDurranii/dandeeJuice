@@ -74,13 +74,20 @@
                     <span>Subtotal</span>
                     <span>PKR {{ number_format($order->subtotal) }}</span>
                 </div>
+                @if ($order->type === 'pickup' && ($order->pickupBranch || $order->delivery_address))
+                <div class="flex justify-between text-sm text-gray-500">
+                    <span>Pickup Branch</span>
+                    <span class="text-gray-700 font-medium">{{ $order->pickupBranch?->name ?? $order->delivery_address }}</span>
+                </div>
+                @elseif ($order->type === 'delivery' && ($order->deliveryZone || $order->delivery_address))
+                <div class="flex justify-between text-sm text-gray-500">
+                    <span>Delivery Zone</span>
+                    <span class="text-gray-700 font-medium">{{ $order->deliveryZone?->name ?? $order->delivery_address }}</span>
+                </div>
+                @endif
                 @if ($order->delivery_fee > 0)
                 <div class="flex justify-between text-sm text-gray-500">
-                    <span>Delivery Fee
-                        @if ($order->delivery_address)
-                            <span class="text-gray-400">({{ $order->delivery_address }})</span>
-                        @endif
-                    </span>
+                    <span>Delivery Fee</span>
                     <span>PKR {{ number_format($order->delivery_fee) }}</span>
                 </div>
                 @endif

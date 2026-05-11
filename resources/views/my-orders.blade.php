@@ -78,6 +78,19 @@
                         @endforeach
                     </div>
 
+                    {{-- Location strip --}}
+                    @php
+                        $locationLabel = $order->type === 'pickup' ? 'Pickup' : 'Zone';
+                        $locationValue = $order->type === 'pickup'
+                            ? ($order->pickupBranch?->name ?? $order->delivery_address)
+                            : ($order->deliveryZone?->name ?? $order->delivery_address);
+                    @endphp
+                    @if ($locationValue)
+                    <div class="px-5 py-2 border-t border-gray-50 text-xs text-gray-400">
+                        <span class="font-medium text-gray-500">{{ $locationLabel }}:</span> {{ $locationValue }}
+                    </div>
+                    @endif
+
                     {{-- Footer --}}
                     <div class="flex items-center justify-between px-5 py-3 bg-gray-50 border-t border-gray-100">
                         <div class="text-sm">

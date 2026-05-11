@@ -18,6 +18,8 @@ class Order extends Model
         'delivery_fee',
         'total',
         'delivery_address',
+        'delivery_zone_id',
+        'pickup_branch_id',
         'delivery_lat',
         'delivery_lng',
         'notes',
@@ -37,6 +39,16 @@ class Order extends Model
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function deliveryZone(): BelongsTo
+    {
+        return $this->belongsTo(DeliveryZone::class);
+    }
+
+    public function pickupBranch(): BelongsTo
+    {
+        return $this->belongsTo(Branch::class, 'pickup_branch_id');
     }
 
     public function items(): HasMany

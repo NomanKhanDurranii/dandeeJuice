@@ -17,6 +17,8 @@ class Checkout extends Component
     public string $orderType = '';
     public string $deliveryZoneName = '';
     public ?int $deliveryZoneId = null;
+    public string $pickupBranchName = '';
+    public ?int $pickupBranchId = null;
 
     public string $phone = '';
     public string $paymentMethod = 'cod';
@@ -47,6 +49,8 @@ class Checkout extends Component
         $this->deliveryZoneName = session('delivery_zone_name') ?? '';
         $this->deliveryZoneId = session('delivery_zone_id') ? (int) session('delivery_zone_id') : null;
         $this->deliveryFee = (float) (session('delivery_fee') ?? 0);
+        $this->pickupBranchName = session('pickup_branch_name') ?? '';
+        $this->pickupBranchId = session('pickup_branch_id') ? (int) session('pickup_branch_id') : null;
 
         $this->easypaisaEnabled = Setting::get('easypaisa_enabled', '0') === '1';
         $this->jazzcashEnabled = Setting::get('jazzcash_enabled', '0') === '1';
@@ -87,8 +91,10 @@ class Checkout extends Component
                 'subtotal'         => $this->subtotal,
                 'delivery_fee'     => $this->deliveryFee,
                 'total'            => $this->total(),
-                'delivery_address' => $this->deliveryZoneName ?: null,
-                'notes'            => $this->notes ?: null,
+                'delivery_address'  => $this->orderType === 'delivery' ? ($this->deliveryZoneName ?: null) : ($this->pickupBranchName ?: null),
+                'delivery_zone_id'  => $this->orderType === 'delivery' ? $this->deliveryZoneId : null,
+                'pickup_branch_id'  => $this->orderType === 'pickup' ? $this->pickupBranchId : null,
+                'notes'             => $this->notes ?: null,
             ]);
 
             foreach ($this->items as $productId => $item) {

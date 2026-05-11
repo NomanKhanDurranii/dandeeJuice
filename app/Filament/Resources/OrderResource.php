@@ -96,7 +96,16 @@ class OrderResource extends Resource
                     }),
                 TextColumn::make('total')->money('PKR')->sortable(),
                 TextColumn::make('payment_method')->badge(),
-                TextColumn::make('delivery_address')->label('Zone')->toggleable(),
+                TextColumn::make('location')
+                    ->label('Location')
+                    ->getStateUsing(function (Order $record): string {
+                        if ($record->type === 'delivery') {
+                            return $record->deliveryZone?->name ?? $record->delivery_address ?? '—';
+                        }
+                        return $record->pickupBranch?->name ?? $record->delivery_address ?? '—';
+                    })
+                    ->description(fn (Order $record): string => $record->type === 'delivery' ? 'Delivery Zone' : 'Pickup Branch')
+                    ->toggleable(),
                 TextColumn::make('created_at')->dateTime()->sortable()->label('Placed')->since(),
             ])
             ->defaultSort('created_at', 'desc')

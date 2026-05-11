@@ -169,8 +169,10 @@
                         <p class="text-sm font-semibold {{ $orderType === 'delivery' ? 'text-blue-700' : 'text-green-700' }}">
                             {{ $orderType === 'delivery' ? 'Home Delivery' : 'Takeaway / Pickup' }}
                         </p>
-                        @if ($deliveryZoneName)
-                            <p class="text-xs {{ $orderType === 'delivery' ? 'text-blue-500' : 'text-green-500' }}">{{ $deliveryZoneName }}</p>
+                        @if ($orderType === 'delivery' && $deliveryZoneName)
+                            <p class="text-xs text-blue-500">{{ $deliveryZoneName }}</p>
+                        @elseif ($orderType === 'pickup' && $pickupBranchName)
+                            <p class="text-xs text-green-500">{{ $pickupBranchName }}</p>
                         @endif
                     </div>
                 </div>
