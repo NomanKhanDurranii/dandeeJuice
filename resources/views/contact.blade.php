@@ -81,7 +81,19 @@
              OUR BRANCHES
         ════════════════════════════════════════════════════════ --}}
         @if ($branches->isNotEmpty())
-        <div class="mt-20">
+
+        {{-- Section divider --}}
+        <div class="mt-20 mb-16 flex items-center gap-5">
+            <div class="flex-1 h-px bg-gray-200"></div>
+            <div class="flex items-center gap-2 shrink-0 px-2">
+                <div class="w-1.5 h-1.5 rounded-full bg-red-400"></div>
+                <div class="w-1.5 h-1.5 rounded-full bg-brand-gradient" style="background: linear-gradient(135deg, #22f24f 0%, #064a01 100%);"></div>
+                <div class="w-1.5 h-1.5 rounded-full bg-red-400"></div>
+            </div>
+            <div class="flex-1 h-px bg-gray-200"></div>
+        </div>
+
+        <div>
 
             {{-- Section header --}}
             <div class="text-center mb-12">
