@@ -121,17 +121,35 @@
                 </div>
 
                 {{-- ── PICK-UP TAB ── --}}
-                <div x-show="tab === 'pickup'" x-cloak class="pb-4 space-y-3">
-                    <p class="text-sm font-medium text-gray-700">
-                        {{ $branches->count() > 1 ? 'Our store locations' : 'Our store location' }}
+                <div x-show="tab === 'pickup'" x-cloak class="pb-4">
+                    <p class="text-sm font-medium text-gray-700 mb-3">
+                        {{ $branches->count() > 1 ? 'Select a branch for pick-up' : 'Our store location' }}
                     </p>
 
-                    @forelse ($branches as $branch)
-                        <div class="border-2 border-red-600 bg-red-50 rounded-xl p-4 flex items-start gap-3">
-                            {{-- Icon --}}
-                            <div class="w-10 h-10 rounded-full bg-brand-gradient flex items-center justify-center shrink-0 mt-0.5">
-                                <svg class="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+                    @if ($branches->isNotEmpty())
+                    {{-- Branch selection using Alpine for instant visual feedback --}}
+                    <div class="space-y-3" x-data="{ picked: '{{ $selectedBranchId }}' }">
+                        @foreach ($branches as $branch)
+                        <button
+                            type="button"
+                            @click="picked = '{{ $branch->id }}'; $wire.set('selectedBranchId', '{{ $branch->id }}')"
+                            :class="picked === '{{ $branch->id }}'
+                                ? 'border-2 border-red-600 bg-red-50 ring-0'
+                                : 'border border-gray-200 bg-white hover:border-gray-300 hover:bg-gray-50'"
+                            class="w-full text-left rounded-xl p-4 flex items-start gap-3 transition-all duration-150 cursor-pointer"
+                        >
+                            {{-- Icon: checkmark when selected, store icon when not --}}
+                            <div class="w-10 h-10 rounded-full flex items-center justify-center shrink-0 mt-0.5 transition-all duration-150"
+                                 :style="picked === '{{ $branch->id }}' ? 'background: linear-gradient(135deg,#22f24f 0%,#064a01 100%)' : 'background: #f3f4f6'">
+                                {{-- Store icon (shown when not selected) --}}
+                                <svg x-show="picked !== '{{ $branch->id }}'"
+                                     class="w-5 h-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 21v-7.5a.75.75 0 01.75-.75h3a.75.75 0 01.75.75V21m-4.5 0H2.36m11.14 0H18m0 0h3.64m-1.39 0V9.349m-16.5 11.65V9.35m0 0a3.001 3.001 0 003.75-.615A2.993 2.993 0 009.75 9.75c.896 0 1.7-.393 2.25-1.016a2.993 2.993 0 002.25 1.016c.896 0 1.7-.393 2.25-1.016a3.001 3.001 0 003.75.614m-16.5 0a3.004 3.004 0 01-.621-4.72L4.318 3.44A1.5 1.5 0 015.378 3h13.243a1.5 1.5 0 011.06.44l1.19 1.189a3 3 0 01-.621 4.72m-13.5 8.65h3.75a.75.75 0 00.75-.75V13.5a.75.75 0 00-.75-.75H6.75a.75.75 0 00-.75.75v3.75c0 .415.336.75.75.75z"/>
+                                </svg>
+                                {{-- Checkmark (shown when selected) --}}
+                                <svg x-show="picked === '{{ $branch->id }}'"
+                                     class="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/>
                                 </svg>
                             </div>
 
@@ -140,42 +158,54 @@
                                 <p class="font-bold text-gray-800 text-sm">{{ $branch->name }}</p>
                                 <p class="text-gray-500 text-xs mt-1 leading-relaxed">{{ $branch->address }}</p>
 
-                                {{-- Phone --}}
                                 @if ($branch->phone)
-                                    <a href="tel:{{ preg_replace('/\s+/', '', $branch->phone) }}"
-                                       class="inline-flex items-center gap-1 mt-2 text-xs font-semibold text-gray-700 hover:text-gray-900 transition">
+                                    <span class="inline-flex items-center gap-1 mt-2 text-xs font-semibold text-gray-600">
                                         <svg class="w-3.5 h-3.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                             <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 002.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 01-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 00-1.091-.852H4.5A2.25 2.25 0 002.25 4.5v2.25z"/>
                                         </svg>
                                         {{ $branch->phone }}
-                                    </a>
+                                    </span>
                                 @endif
 
-                                {{-- Actions row --}}
-                                <div class="flex items-center gap-3 mt-2">
-                                    <a href="{{ $branch->mapsUrl() }}"
-                                       target="_blank"
+                                {{-- Links (stop propagation so they don't select the card) --}}
+                                <div class="flex items-center gap-3 mt-2" @click.stop>
+                                    <a href="{{ $branch->mapsUrl() }}" target="_blank"
                                        class="inline-flex items-center gap-1 text-xs font-semibold text-red-600 hover:text-red-700 transition">
                                         <svg class="w-3.5 h-3.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                             <path stroke-linecap="round" stroke-linejoin="round" d="M9 6.75V15m6-6v8.25m.503 3.498l4.875-2.437c.381-.19.622-.58.622-1.006V4.82c0-.836-.88-1.38-1.628-1.006l-3.869 1.934c-.317.159-.69.159-1.006 0L9.503 3.252a1.125 1.125 0 00-1.006 0L3.622 5.689C3.24 5.88 3 6.27 3 6.695V19.18c0 .836.88 1.38 1.628 1.006l3.869-1.934c-.317-.159.69-.159 1.006 0l4.994 2.497c.317.158.69.158 1.006 0z"/>
                                         </svg>
                                         Get Directions
                                     </a>
-
                                     @if ($branch->phone || $branch->whatsapp)
-                                        <a href="{{ $branch->waUrl('Hi DandeeJuice! I want to place a pick-up order.') }}"
-                                           target="_blank"
-                                           class="inline-flex items-center gap-1 text-xs font-semibold text-green-700 hover:text-green-800 transition">
-                                            <svg class="w-3.5 h-3.5 shrink-0" fill="currentColor" viewBox="0 0 24 24">
-                                                <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347zM12 0C5.373 0 0 5.373 0 12c0 2.123.553 4.113 1.523 5.848L.057 23.428a.5.5 0 00.515.572l5.736-1.505A11.96 11.96 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.852 0-3.595-.5-5.104-1.375l-.367-.215-3.803.997.998-3.868-.232-.378A9.936 9.936 0 012 12C2 6.486 6.486 2 12 2s10 4.486 10 10-4.486 10-10 10z"/>
-                                            </svg>
-                                            WhatsApp
-                                        </a>
+                                    <a href="{{ $branch->waUrl('Hi DandeeJuice! I want to place a pick-up order.') }}"
+                                       target="_blank"
+                                       class="inline-flex items-center gap-1 text-xs font-semibold text-green-700 hover:text-green-800 transition">
+                                        <svg class="w-3.5 h-3.5 shrink-0" fill="currentColor" viewBox="0 0 24 24">
+                                            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347zM12 0C5.373 0 0 5.373 0 12c0 2.123.553 4.113 1.523 5.848L.057 23.428a.5.5 0 00.515.572l5.736-1.505A11.96 11.96 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.852 0-3.595-.5-5.104-1.375l-.367-.215-3.803.997.998-3.868-.232-.378A9.936 9.936 0 012 12C2 6.486 6.486 2 12 2s10 4.486 10 10-4.486 10-10 10z"/>
+                                        </svg>
+                                        WhatsApp
+                                    </a>
                                     @endif
                                 </div>
                             </div>
-                        </div>
-                    @empty
+
+                            {{-- Selection indicator dot (right side) --}}
+                            <div class="shrink-0 mt-1">
+                                <div class="w-4 h-4 rounded-full border-2 transition-all duration-150 flex items-center justify-center"
+                                     :class="picked === '{{ $branch->id }}'
+                                         ? 'border-red-600 bg-red-600'
+                                         : 'border-gray-300 bg-white'">
+                                    <svg x-show="picked === '{{ $branch->id }}'"
+                                         class="w-2.5 h-2.5 text-white" fill="currentColor" viewBox="0 0 24 24">
+                                        <circle cx="12" cy="12" r="6"/>
+                                    </svg>
+                                </div>
+                            </div>
+                        </button>
+                        @endforeach
+                    </div>
+                    @else
+                    {{-- @empty equivalent: fallback when no branches configured --}}
                         {{-- Fallback to settings if no branches configured --}}
                         @php $fallbackAddress = \App\Models\Setting::get('store_address', '') @endphp
                         @if ($fallbackAddress)
@@ -203,7 +233,7 @@
                                 No branch locations configured yet. Please contact us on WhatsApp for pick-up details.
                             </div>
                         @endif
-                    @endforelse
+                    @endif
                 </div>
 
             </div>

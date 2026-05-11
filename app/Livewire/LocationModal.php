@@ -13,6 +13,8 @@ class LocationModal extends Component
 
     public string $selectedZoneId = '';
 
+    public string $selectedBranchId = '';
+
     public ?string $error = null;
 
     public Collection $zones;
@@ -35,7 +37,24 @@ class LocationModal extends Component
 
     public function choosePickup(): void
     {
-        session(['order_type' => 'pickup', 'delivery_zone_id' => null, 'delivery_zone_name' => null, 'delivery_fee' => 0]);
+        $this->error = null;
+
+        if ($this->branches->isNotEmpty() && empty($this->selectedBranchId)) {
+            $this->error = 'Please select a branch for pick-up.';
+            return;
+        }
+
+        $branch = $this->branches->firstWhere('id', (int) $this->selectedBranchId);
+
+        session([
+            'order_type'         => 'pickup',
+            'delivery_zone_id'   => null,
+            'delivery_zone_name' => null,
+            'delivery_fee'       => 0,
+            'pickup_branch_id'   => $branch?->id,
+            'pickup_branch_name' => $branch?->name,
+        ]);
+
         $this->visible = false;
         $this->dispatch('order-type-selected', type: 'pickup');
     }
