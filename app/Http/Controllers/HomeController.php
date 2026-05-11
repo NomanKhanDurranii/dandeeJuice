@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Branch;
 use App\Models\CarouselSlide;
 use App\Models\Category;
 use App\Models\Faq;
@@ -39,7 +40,11 @@ class HomeController extends Controller
             Faq::active()->get()
         );
 
-        return view('contact', compact('categories', 'faqs'));
+        $branches = Cache::remember('branches.active', self::TTL, fn () =>
+            Branch::activeOrdered()->get()
+        );
+
+        return view('contact', compact('categories', 'faqs', 'branches'));
     }
 
     public function about(): View

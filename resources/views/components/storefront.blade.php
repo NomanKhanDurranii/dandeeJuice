@@ -94,7 +94,7 @@
             {{-- CENTER: Logo --}}
             <div class="absolute left-1/2 -translate-x-1/2">
                 <a href="{{ route('home') }}" class="hover:opacity-80 transition-opacity duration-200 block">
-                    <img src="/android-chrome-512x512.png" alt="DandeeJuice" style="height: calc(var(--spacing) * 12); width: auto;">
+                    <img src="/android-chrome-512x512.png" alt="DandeeJuice" style="height: calc(var(--spacing) * 12); width: calc(var(--spacing) * 24); object-fit: contain;">
                 </a>
             </div>
 
