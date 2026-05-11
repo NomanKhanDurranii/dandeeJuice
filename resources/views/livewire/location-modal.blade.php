@@ -2,7 +2,7 @@
     @if ($visible)
     <div
         class="fixed inset-0 z-50 flex items-end sm:items-center justify-center sm:px-4"
-        x-data="{ tab: 'delivery' }"
+        x-data="{ tab: 'delivery', pickedBranch: '{{ $selectedBranchId }}' }"
         x-init="document.body.style.overflow = 'hidden'"
     >
         {{-- Backdrop --}}
@@ -128,26 +128,24 @@
 
                     @if ($branches->isNotEmpty())
                     {{-- Branch selection using Alpine for instant visual feedback --}}
-                    <div class="space-y-3" x-data="{ picked: '{{ $selectedBranchId }}' }">
+                    <div class="space-y-3">
                         @foreach ($branches as $branch)
                         <button
                             type="button"
-                            @click="picked = '{{ $branch->id }}'; $wire.set('selectedBranchId', '{{ $branch->id }}')"
-                            :class="picked === '{{ $branch->id }}'
-                                ? 'border-2 border-red-600 bg-red-50 ring-0'
+                            @click="pickedBranch = '{{ $branch->id }}'"
+                            :class="pickedBranch === '{{ $branch->id }}'
+                                ? 'border-2 border-red-600 bg-red-50'
                                 : 'border border-gray-200 bg-white hover:border-gray-300 hover:bg-gray-50'"
                             class="w-full text-left rounded-xl p-4 flex items-start gap-3 transition-all duration-150 cursor-pointer"
                         >
                             {{-- Icon: checkmark when selected, store icon when not --}}
                             <div class="w-10 h-10 rounded-full flex items-center justify-center shrink-0 mt-0.5 transition-all duration-150"
-                                 :style="picked === '{{ $branch->id }}' ? 'background: linear-gradient(135deg,#22f24f 0%,#064a01 100%)' : 'background: #f3f4f6'">
-                                {{-- Store icon (shown when not selected) --}}
-                                <svg x-show="picked !== '{{ $branch->id }}'"
+                                 :style="pickedBranch === '{{ $branch->id }}' ? 'background: linear-gradient(135deg,#22f24f 0%,#064a01 100%)' : 'background: #f3f4f6'">
+                                <svg x-show="pickedBranch !== '{{ $branch->id }}'"
                                      class="w-5 h-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 21v-7.5a.75.75 0 01.75-.75h3a.75.75 0 01.75.75V21m-4.5 0H2.36m11.14 0H18m0 0h3.64m-1.39 0V9.349m-16.5 11.65V9.35m0 0a3.001 3.001 0 003.75-.615A2.993 2.993 0 009.75 9.75c.896 0 1.7-.393 2.25-1.016a2.993 2.993 0 002.25 1.016c.896 0 1.7-.393 2.25-1.016a3.001 3.001 0 003.75.614m-16.5 0a3.004 3.004 0 01-.621-4.72L4.318 3.44A1.5 1.5 0 015.378 3h13.243a1.5 1.5 0 011.06.44l1.19 1.189a3 3 0 01-.621 4.72m-13.5 8.65h3.75a.75.75 0 00.75-.75V13.5a.75.75 0 00-.75-.75H6.75a.75.75 0 00-.75.75v3.75c0 .415.336.75.75.75z"/>
                                 </svg>
-                                {{-- Checkmark (shown when selected) --}}
-                                <svg x-show="picked === '{{ $branch->id }}'"
+                                <svg x-show="pickedBranch === '{{ $branch->id }}'"
                                      class="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/>
                                 </svg>
@@ -192,10 +190,10 @@
                             {{-- Selection indicator dot (right side) --}}
                             <div class="shrink-0 mt-1">
                                 <div class="w-4 h-4 rounded-full border-2 transition-all duration-150 flex items-center justify-center"
-                                     :class="picked === '{{ $branch->id }}'
+                                     :class="pickedBranch === '{{ $branch->id }}'
                                          ? 'border-red-600 bg-red-600'
                                          : 'border-gray-300 bg-white'">
-                                    <svg x-show="picked === '{{ $branch->id }}'"
+                                    <svg x-show="pickedBranch === '{{ $branch->id }}'"
                                          class="w-2.5 h-2.5 text-white" fill="currentColor" viewBox="0 0 24 24">
                                         <circle cx="12" cy="12" r="6"/>
                                     </svg>
@@ -255,8 +253,9 @@
                 </div>
                 <div x-show="tab === 'pickup'">
                     <button
-                        wire:click="choosePickup"
+                        @click="$wire.set('selectedBranchId', pickedBranch).then(() => $wire.choosePickup())"
                         wire:loading.attr="disabled"
+                        wire:target="choosePickup"
                         class="w-full bg-brand-gradient disabled:opacity-60 text-white font-bold py-3.5 rounded-xl text-sm transition active:scale-95"
                     >
                         <span wire:loading.remove wire:target="choosePickup">Confirm Pick-up</span>
