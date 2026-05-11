@@ -5,6 +5,8 @@ namespace App\Filament\Resources;
 use App\Filament\Exports\OrderExporter;
 use App\Filament\Resources\OrderResource\Pages;
 use App\Filament\Resources\OrderResource\RelationManagers\ItemsRelationManager;
+use App\Models\Branch;
+use App\Models\DeliveryZone;
 use App\Models\Order;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
@@ -63,6 +65,18 @@ class OrderResource extends Resource
                     'jazzcash'  => 'JazzCash',
                 ])
                 ->required(),
+
+            Select::make('pickup_branch_id')
+                ->label('Pickup Branch')
+                ->options(fn () => Branch::activeOrdered()->pluck('name', 'id')->toArray())
+                ->searchable()
+                ->hidden(fn (?Order $record) => $record?->type !== 'pickup'),
+
+            Select::make('delivery_zone_id')
+                ->label('Delivery Zone')
+                ->options(fn () => DeliveryZone::activeOrdered()->pluck('name', 'id')->toArray())
+                ->searchable()
+                ->hidden(fn (?Order $record) => $record?->type !== 'delivery'),
 
             Textarea::make('notes')->rows(3)->columnSpanFull(),
         ]);
