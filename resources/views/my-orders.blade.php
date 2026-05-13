@@ -1,4 +1,8 @@
-<x-storefront :navCategories="[]">
+<x-storefront
+    :navCategories="[]"
+    title="My Orders – DandeeJuice"
+    description="View your DandeeJuice order history, track active orders, and reorder your favourites."
+>
 
     <div class="max-w-4xl mx-auto px-4 py-12">
 

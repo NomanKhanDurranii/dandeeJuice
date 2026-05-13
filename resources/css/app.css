@@ -11,13 +11,13 @@
     --color-brand-dark: #1e40af;
     --color-brand-light: #dbeafe;
 
-    /* Brand green scale: #22f24f (light) → #064a01 (dark) */
+    /* Brand green scale: #18c03d (light) → #064a01 (dark) */
     --color-red-50:  #edfdf3;
     --color-red-100: #ccfadc;
     --color-red-200: #9af5be;
     --color-red-300: #5eefa0;
     --color-red-400: #30e87c;
-    --color-red-500: #22f24f;
+    --color-red-500: #18c03d;
     --color-red-600: #18c03d;
     --color-red-700: #0e8f2c;
     --color-red-800: #07601d;
@@ -25,17 +25,17 @@
 }
 
 @utility bg-brand-gradient {
-    background: linear-gradient(135deg, #22f24f 0%, #064a01 100%);
+    background: linear-gradient(135deg, #18c03d 0%, #064a01 100%);
 }
 
 @utility bg-brand-gradient-hover {
     &:hover {
-        background: linear-gradient(135deg, #1bd944 0%, #053d01 100%);
+        background: linear-gradient(135deg, #14a834 0%, #053d01 100%);
     }
 }
 
 @utility text-brand-gradient {
-    background: linear-gradient(135deg, #22f24f 0%, #064a01 100%);
+    background: linear-gradient(135deg, #18c03d 0%, #064a01 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;

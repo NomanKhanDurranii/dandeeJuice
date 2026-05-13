@@ -1,4 +1,8 @@
-<x-storefront :navCategories="[]">
+<x-storefront
+    :navCategories="[]"
+    title="Privacy Policy – DandeeJuice"
+    description="Read DandeeJuice's privacy policy to understand how we collect, use, and protect your personal information when you use our website and services."
+>
 
     <section class="relative w-full overflow-hidden" style="height:280px;">
         <img src="/images/privacy-policy.jpg" alt="Privacy Policy"

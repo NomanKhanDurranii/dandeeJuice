@@ -1,4 +1,8 @@
-<x-storefront :navCategories="[]">
+<x-storefront
+    :navCategories="[]"
+    title="Refund Policy – DandeeJuice"
+    description="Learn about DandeeJuice's refund and return policy. We're committed to your satisfaction – find out how to request a refund or report an issue with your order."
+>
 
     <section class="relative w-full overflow-hidden" style="height:280px;">
         <img src="/images/refund-policy.jpg" alt="Refund Policy"

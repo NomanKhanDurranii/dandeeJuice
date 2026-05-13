@@ -1,4 +1,8 @@
-<x-storefront :navCategories="$categories">
+<x-storefront
+    :navCategories="$categories"
+    title="About Us – DandeeJuice | Our Story & Mission"
+    description="Learn about DandeeJuice – our passion for fresh, natural juices and shakes. We use 100% real fruits with no artificial flavours or preservatives. Taste the difference."
+>
 
     {{-- Hero Banner --}}
     <section class="relative w-full overflow-hidden" style="height:380px;">

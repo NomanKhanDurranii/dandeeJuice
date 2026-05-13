@@ -1,4 +1,8 @@
-<x-storefront :navCategories="[]">
+<x-storefront
+    :navCategories="[]"
+    title="Order Confirmed – DandeeJuice"
+    description="Your DandeeJuice order has been placed successfully. We'll contact you shortly to confirm your delivery or pickup details."
+>
     <div class="max-w-2xl mx-auto px-4 py-16">
 
         {{-- Success header --}}

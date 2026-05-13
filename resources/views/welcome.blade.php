@@ -1,4 +1,8 @@
-<x-storefront :navCategories="$categories">
+<x-storefront
+    :navCategories="$categories"
+    title="DandeeJuice – Fresh Juices & Shakes | Order Online in Pakistan"
+    description="Order fresh cold-pressed juices, fruit shakes & healthy drinks from DandeeJuice. Home delivery & pickup available. Made daily with 100% natural ingredients."
+>
 
     {{-- =========== HERO CAROUSEL =========== --}}
     <x-hero-carousel :slides="$slides" />

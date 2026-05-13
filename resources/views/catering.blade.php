@@ -1,4 +1,8 @@
-<x-storefront :navCategories="$categories">
+<x-storefront
+    :navCategories="$categories"
+    title="Catering Service – DandeeJuice | Fresh Juice for Events"
+    description="Planning an event? DandeeJuice offers fresh juice & shake catering for weddings, corporate events, and parties across Pakistan. Get a custom quote today."
+>
 
 @php
     $whatsapp = \App\Models\Setting::get('whatsapp_number', '923001234567');

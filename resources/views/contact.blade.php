@@ -1,4 +1,8 @@
-<x-storefront :navCategories="$categories">
+<x-storefront
+    :navCategories="$categories"
+    title="Contact Us – DandeeJuice | Get in Touch"
+    description="Have a question or feedback? Contact DandeeJuice via WhatsApp, phone, or our online form. Find our branch locations and business hours here."
+>
 
     {{-- Hero Banner --}}
     <section class="relative w-full overflow-hidden" style="height:320px;">

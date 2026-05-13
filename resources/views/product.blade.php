@@ -1,6 +1,11 @@
-<x-storefront :navCategories="[]">
+<x-storefront
+    :navCategories="[]"
+    :title="$product->name . ' – DandeeJuice'"
+    :description="$product->description ? Str::limit(strip_tags($product->description), 155) : 'Order ' . $product->name . ' from DandeeJuice. Fresh, natural, and made daily. Available for home delivery and pickup across Pakistan.'"
+>
 
 @php
+    use Illuminate\Support\Str;
     $allImages = $product->getMedia('images');
     $primaryImg = $allImages->first()?->getUrl() ?? null;
     $thumbImgs  = $allImages->map(fn ($m) => ['card' => $m->getUrl(), 'thumb' => $m->getUrl()])->values();
