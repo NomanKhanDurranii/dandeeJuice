@@ -39,7 +39,8 @@
             >
                 @if ($img)
                     <img src="{{ $img }}" alt="{{ $slide->title }}"
-                         class="w-full h-full object-cover">
+                         class="w-full h-full object-cover"
+                         @if($i === 0) fetchpriority="high" @else loading="lazy" @endif>
                 @else
                     {{-- Placeholder gradient if no image uploaded yet --}}
                     <div class="w-full h-full bg-gradient-to-br from-blue-900 via-blue-800 to-blue-700"></div>

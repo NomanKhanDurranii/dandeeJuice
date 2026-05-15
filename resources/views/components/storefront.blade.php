@@ -9,15 +9,17 @@
     <title>{{ $title ?? 'DandeeJuice – Fresh Juices & Shakes | Delivery & Pickup' }}</title>
     <meta name="description" content="{{ $description ?? 'Order fresh cold-pressed juices, fruit shakes & healthy drinks from DandeeJuice. Fast home delivery or pickup available. 100% natural ingredients, made daily.' }}">
     <meta name="robots" content="index, follow">
-    <link rel="canonical" href="{{ url()->current() }}"
+    <link rel="canonical" href="{{ url()->current() }}">
     <link rel="icon" type="image/x-icon" href="/favicon.ico">
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
-    <link rel="preconnect" href="https://fonts.bunny.net">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,700&display=swap" rel="stylesheet">
+    {{-- Non-blocking font load: media trick swaps to all after load --}}
+    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,700&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,700&display=swap" media="print" onload="this.media='all'">
+    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,700&display=swap"></noscript>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     @livewireStyles
     <style>[x-cloak]{display:none!important}</style>

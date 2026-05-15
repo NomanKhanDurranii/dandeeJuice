@@ -308,6 +308,7 @@
                                 loop
                                 muted
                                 playsinline
+                                preload="none"
                                 class="w-full object-cover"
                                 style="height: 56vw; max-height: 520px; min-height: 260px; display: block;"
                             >
