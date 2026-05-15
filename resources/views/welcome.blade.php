@@ -201,7 +201,7 @@
     {{-- Static background image; each category gets its own max-w container so the
          mid-section video can bleed full-width naturally between them. --}}
     <div id="products-scroll-section"
-         style="background-image: url('/images/background.png'); background-size: cover; background-position: center; background-attachment: fixed;">
+         style="background-image: url('/images/background.jpg'); background-size: cover; background-position: center; background-attachment: fixed;">
 
         @php $renderedCatCount = 0; @endphp
 
