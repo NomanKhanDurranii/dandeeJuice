@@ -6,8 +6,10 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Str;
+use Spatie\Image\Enums\Fit;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
 class Product extends Model implements HasMedia
 {
     use InteractsWithMedia;
@@ -57,6 +59,21 @@ class Product extends Model implements HasMedia
         $this->addMediaCollection('images')
             ->useDisk('public')
             ->useFallbackUrl('/images/placeholder-product.jpg');
+    }
+
+    public function registerMediaConversions(Media $media = null): void
+    {
+        // Used on product cards across the site (homepage, search, related)
+        $this->addMediaConversion('thumb')
+            ->fit(Fit::Crop, 480, 480)
+            ->quality(80)
+            ->performOnCollections('images');
+
+        // Used on the product detail page (main image)
+        $this->addMediaConversion('detail')
+            ->fit(Fit::Contain, 900, 900)
+            ->quality(85)
+            ->performOnCollections('images');
     }
 
     public function category(): BelongsTo

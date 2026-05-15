@@ -238,7 +238,7 @@
                         {{-- Product grid --}}
                         <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
                             @foreach ($category->activeProducts as $product)
-                                @php $thumb = $product->getFirstMediaUrl('images'); @endphp
+                                @php $thumb = $product->getFirstMediaUrl('images', 'thumb'); @endphp
 
                                 <div class="group bg-white rounded-2xl shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 overflow-hidden flex flex-col"
                                      data-product-card

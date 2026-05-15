@@ -34,6 +34,7 @@ class CarouselSlide extends Model implements HasMedia
     {
         $this->addMediaConversion('banner')
             ->fit(Fit::Crop, 1920, 600)
+            ->quality(80)
             ->performOnCollections('slide');
     }
 

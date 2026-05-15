@@ -7,8 +7,8 @@
 @php
     use Illuminate\Support\Str;
     $allImages = $product->getMedia('images');
-    $primaryImg = $allImages->first()?->getUrl() ?? null;
-    $thumbImgs  = $allImages->map(fn ($m) => ['card' => $m->getUrl(), 'thumb' => $m->getUrl()])->values();
+    $primaryImg = $allImages->first()?->getUrl('detail') ?? null;
+    $thumbImgs  = $allImages->map(fn ($m) => ['card' => $m->getUrl('detail'), 'thumb' => $m->getUrl('thumb')])->values();
 @endphp
 
 {{-- Breadcrumb --}}
@@ -336,7 +336,7 @@
 
     <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
         @foreach ($relatedProducts as $rp)
-        @php $rpThumb = $rp->getFirstMediaUrl('images'); @endphp
+        @php $rpThumb = $rp->getFirstMediaUrl('images', 'thumb'); @endphp
         <a
             href="{{ route('product.show', $rp->slug) }}"
             class="group bg-white rounded-2xl border border-gray-100 hover:border-blue-200 shadow-sm hover:shadow-md transition-all overflow-hidden flex flex-col"
